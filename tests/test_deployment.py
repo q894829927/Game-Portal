@@ -55,7 +55,7 @@ class ReleaseTests(unittest.TestCase):
 
 
 class ApprovalTests(unittest.TestCase):
-    def run(self, *, sha=SHA, branch="main", event="push",
+    def make_run(self, *, sha=SHA, branch="main", event="push",
             status="completed", conclusion="success", id=100, attempt=1,
             path="q894829927/Game-Portal/.github/workflows/validate-portal.yml@main"):
         return {
@@ -65,17 +65,17 @@ class ApprovalTests(unittest.TestCase):
         }
 
     def test_matching_success_approved(self):
-        self.assertEqual(gate.decision({"workflow_runs": [self.run()]}, SHA), "approved")
+        self.assertEqual(gate.decision({"workflow_runs": [self.make_run()]}, SHA), "approved")
 
     def test_all_unapproved_variants(self):
         cases = [
-            self.run(sha="2" * 40),
-            self.run(branch="other"),
-            self.run(event="pull_request"),
-            self.run(status="in_progress", conclusion=None),
-            self.run(status="completed", conclusion="failure"),
-            self.run(status="completed", conclusion="cancelled"),
-            self.run(path="q894829927/Game-Portal/.github/workflows/unrelated.yml"),
+            self.make_run(sha="2" * 40),
+            self.make_run(branch="other"),
+            self.make_run(event="pull_request"),
+            self.make_run(status="in_progress", conclusion=None),
+            self.make_run(status="completed", conclusion="failure"),
+            self.make_run(status="completed", conclusion="cancelled"),
+            self.make_run(path="q894829927/Game-Portal/.github/workflows/unrelated.yml"),
         ]
         for run in cases:
             with self.subTest(run=run):
@@ -83,8 +83,8 @@ class ApprovalTests(unittest.TestCase):
 
     def test_latest_failed_attempt_blocks_older_success(self):
         runs = [
-            self.run(id=3, attempt=1, status="completed", conclusion="success"),
-            self.run(id=3, attempt=2, status="completed", conclusion="failure"),
+            self.make_run(id=3, attempt=1, status="completed", conclusion="success"),
+            self.make_run(id=3, attempt=2, status="completed", conclusion="failure"),
         ]
         self.assertTrue(gate.decision({"workflow_runs": runs}, SHA).startswith("waiting"))
 
