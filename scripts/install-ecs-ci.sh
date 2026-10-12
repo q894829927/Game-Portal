@@ -45,6 +45,7 @@ git -C /opt/game-portal/repo remote set-url origin \
   https://github.com/q894829927/Game-Portal.git
 install -m 0755 "$source_dir/scripts/deploy-portal-ecs.sh" /opt/game-portal/bin/deploy.sh
 install -m 0644 "$source_dir/scripts/prepare_release.py" /opt/game-portal/bin/prepare_release.py
+install -m 0644 "$source_dir/scripts/ci_gate.py" /opt/game-portal/bin/ci_gate.py
 install -m 0644 "$source_dir/ops/systemd/game-portal-deploy.service" /etc/systemd/system/game-portal-deploy.service
 install -m 0644 "$source_dir/ops/systemd/game-portal-deploy.timer" /etc/systemd/system/game-portal-deploy.timer
 
