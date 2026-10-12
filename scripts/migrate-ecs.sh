@@ -27,7 +27,7 @@ while (( $# )); do
 done
 [[ "$ACTION" == preflight || "$ACTION" == apply || "$ACTION" == rollback ]] || { usage; exit 2; }
 [[ $EUID -eq 0 ]] || { echo "Run with sudo on ECS" >&2; exit 1; }
-for cmd in nginx git curl python3 cmp readlink; do
+for cmd in nginx git curl python3 cmp readlink tar; do
   command -v "$cmd" >/dev/null || { echo "Missing $cmd" >&2; exit 1; }
 done
 log() { printf '[Portal] %s\n' "$*"; }
@@ -138,18 +138,30 @@ log "Backup snapshot: $BACKUP"
 # failure (including a permissions or network error) is recoverable.
 STAGED=1
 
-tmp="$(mktemp -d)"
-trap 'rm -rf "$tmp"' EXIT
-git clone --depth 1 --branch main https://github.com/q894829927/Game-Portal.git "$tmp/portal"
-if [[ "$PORTAL_REF" != main ]]; then
-  git -C "$tmp/portal" fetch --depth 1 origin "$PORTAL_REF"
-  git -C "$tmp/portal" checkout --detach FETCH_HEAD
+# Use the locally checked-out repository instead of cloning GitHub again.
+# Cloning during "apply" is vulnerable to temporary ECS-to-GitHub network
+# errors, even after the user just completed a successful "git pull".
+SOURCE_REPO="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+[[ "$PORTAL_REF" == "main" ]] || die "Offline migration only supports --ref main"
+[[ "$(git -C "$SOURCE_REPO" rev-parse --show-toplevel)" == "$SOURCE_REPO" ]] ||
+  die "Migration script must run from a Game-Portal working tree"
+[[ "$(git -C "$SOURCE_REPO" remote get-url origin)" == "https://github.com/q894829927/Game-Portal.git" ||
+   "$(git -C "$SOURCE_REPO" remote get-url origin)" == "git@github.com:q894829927/Game-Portal.git" ]] ||
+  die "Unexpected repository origin; inspect before deploying"
+[[ "$(git -C "$SOURCE_REPO" branch --show-current)" == "main" ]] ||
+  die "Check out Game-Portal main branch before migration"
+if [[ -n "$(git -C "$SOURCE_REPO" status --porcelain)" ]]; then
+  die "Local checkout has uncommitted changes. Commit/stash them before migration."
 fi
-sha="$(git -C "$tmp/portal" rev-parse --short=12 HEAD)"
+sha="$(git -C "$SOURCE_REPO" rev-parse --short=12 HEAD)"
 release="$PORTAL/releases/$stamp-$sha"
 mkdir -p "$release"
-cp -a "$tmp/portal/." "$release/"
-rm -rf "$release/.git"
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+# git archive uses committed bytes, excludes .git and untracked files, and
+# never contacts GitHub. Preserve original committed file permissions.
+git -C "$SOURCE_REPO" archive --format=tar HEAD | tar -xf - -C "$release"
+log "Staged local Game-Portal commit $sha (no GitHub request during apply)."
 for name in index.html styles.css app.js config.js assets/rift-art.svg assets/tactics-art.svg assets/favicon.svg; do
   [[ -s "$release/$name" ]] || die "Missing portal asset: $name"
 done
