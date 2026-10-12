@@ -97,6 +97,11 @@ if "game-portal-routes.conf" in s:
     sys.exit("Portal already installed. Do not apply twice; use rollback first.")
 if re.search(r"(?m)^\s*location\s*=\s*/\s*\{",s):
     sys.exit("Conflicting exact '/' location; manual review needed.")
+index_locations = re.findall(r"(?m)^[ \t]*location[ \t]+=[ \t]+/index\.html[ \t]*\{",s)
+if len(index_locations) != 1:
+    sys.exit("Expected exactly one original exact '/index.html' location as in the provided rift.conf; abort.")
+# This is the known ECS kit's setup; its original index location is retained
+# and its root gets overridden to the portal in the activation transaction.
 PY
 [[ -L "$RIFT" && -s "$RIFT/index.html" && -d "$RIFT/assets" ]] ||
   die "Expected deployed Rift at $RIFT, with index.html and assets"
@@ -155,7 +160,6 @@ chmod -R a+rX "$release"
 cat > "$SNIPPET" <<'NGINX'
 # Preserve existing Colyseus /health, matchmaking, WS, and Rift /assets/ routes.
 location = / { root /var/www/game-portal/current; try_files /index.html =404; }
-location = /index.html { root /var/www/game-portal/current; try_files $uri =404; }
 location = /styles.css { root /var/www/game-portal/current; try_files $uri =404; }
 location = /app.js { root /var/www/game-portal/current; try_files $uri =404; }
 location = /config.js { root /var/www/game-portal/current; try_files $uri =404; }
@@ -177,6 +181,19 @@ import os,re,tempfile
 p=Path(os.environ["SITE"]); s=p.read_text()
 matches=list(re.finditer(r"(?m)^[ \t]*server\s*\{",s))
 if len(matches)!=1: raise SystemExit("Site changed during migration")
+# The original ECS kit already declares "location = /index.html" for
+# no-store caching. Retain its directives but override the document root,
+# rather than defining a second identical Nginx location in the include.
+index=list(re.finditer(r"(?m)^[ \t]*location[ \t]+=[ \t]+/index\.html[ \t]*\{",s))
+if len(index)!=1: raise SystemExit("Original exact index location missing")
+brace_end=s.find("}",index[0].end())
+if brace_end<0: raise SystemExit("Index location not closed")
+existing=s[index[0].end():brace_end]
+if re.search(r"(?m)^\s*(root|alias)\b",existing):
+    raise SystemExit("Index location already defines root/alias; manual review needed")
+offset=index[0].end()
+s=s[:offset]+"\n        root /var/www/game-portal/current;"+s[offset:]
+matches=list(re.finditer(r"(?m)^[ \t]*server\s*\{",s))
 i=matches[0].end(); s=s[:i]+"\n    include "+os.environ["SNIPPET"]+";\n"+s[i:]
 fd,tmp=tempfile.mkstemp(prefix=".portal-",dir=p.parent)
 with os.fdopen(fd,"w") as f: f.write(s)
@@ -188,6 +205,7 @@ mv -Tf "$PORTAL/.current-new" "$PORTAL/current"
 reload_nginx
 
 get / | grep -q 'id="rift-enter"' || die "Portal index failed"
+get /index.html | grep -q 'id="rift-enter"' || die "Portal /index.html failed"
 get /styles.css | grep -q 'game-grid' || die "Portal CSS failed"
 get /portal-assets/rift-art.svg | grep -q '<svg' || die "Portal artwork failed"
 get /games/rift/ | grep -Eqi '异界共振|Rift Resonance|RIFT' || die "Rift new path failed"
