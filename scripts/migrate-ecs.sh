@@ -204,12 +204,40 @@ ln -s "$release" "$PORTAL/.current-new"
 mv -Tf "$PORTAL/.current-new" "$PORTAL/current"
 reload_nginx
 
-get / | grep -q 'id="rift-enter"' || die "Portal index failed"
-get /index.html | grep -q 'id="rift-enter"' || die "Portal /index.html failed"
-get /styles.css | grep -q 'game-grid' || die "Portal CSS failed"
-get /portal-assets/rift-art.svg | grep -q '<svg' || die "Portal artwork failed"
-get /games/rift/ | grep -Eqi '异界共振|Rift Resonance|RIFT' || die "Rift new path failed"
-get /health | grep -q '"status"' || die "Game /health failed"
+# nginx reload can return before all worker processes accept the new
+# configuration. Retry real HTTP checks rather than treating one response from
+# an old worker as a fatal production change. Use a file, not curl | grep -q,
+# so that early grep termination cannot produce a curl SIGPIPE under pipefail.
+wait_for_route() {
+  local url="$1" marker="$2" desc="$3"
+  local status="" response="$tmp/route-response"
+  local attempt
+  for attempt in $(seq 1 24); do
+    if status="$(curl --silent --show-error --max-time 8 -o "$response" \
+      -w '%{http_code}' -H "Host: $HOST" "http://127.0.0.1$url")"; then
+      if [[ "$status" == 200 ]] && grep -Eqi -- "$marker" "$response"; then
+        log "HTTP verified: $url (200; attempt $attempt)"
+        return 0
+      fi
+    fi
+    sleep 0.5
+  done
+  log "HTTP check failed: $desc; URL=$url; last_status=${status:-unknown}" >&2
+  log "Last response (first 300 bytes):" >&2
+  head -c 300 "$response" >&2 || true
+  printf '\n' >&2
+  if [[ -r /var/log/nginx/error.log ]]; then
+    log "Last Nginx errors:" >&2
+    tail -n 8 /var/log/nginx/error.log >&2
+  fi
+  die "$desc"
+}
+wait_for_route / 'id="rift-enter"' 'Portal index failed'
+wait_for_route /index.html 'id="rift-enter"' 'Portal /index.html failed'
+wait_for_route /styles.css 'game-grid' 'Portal CSS failed'
+wait_for_route /portal-assets/rift-art.svg '<svg' 'Portal artwork failed'
+wait_for_route /games/rift/ '异界共振|Rift Resonance|RIFT' 'Rift new path failed'
+wait_for_route /health '"status"' 'Game /health failed'
 asset="$(python3 - "$RIFT/index.html" <<'PY'
 import re,sys
 s=open(sys.argv[1]).read()
