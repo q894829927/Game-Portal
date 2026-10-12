@@ -12,7 +12,7 @@ def decision(payload: dict, sha: str) -> str:
         if run.get("head_sha") == sha
         and run.get("event") == "push"
         and run.get("head_branch") == "main"
-        and run.get("path", "").endswith("/.github/workflows/validate-portal.yml")
+        and (not run.get("path") or run["path"].split("@", 1)[0].endswith(".github/workflows/validate-portal.yml"))
     ]
     if not runs:
         return "waiting:no matching CI"
