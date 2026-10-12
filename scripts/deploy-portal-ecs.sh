@@ -24,7 +24,7 @@ die() { log "ERROR: $*" >&2; exit 1; }
 for cmd in curl git python3 tar flock timeout cmp; do
   command -v "$cmd" >/dev/null || die "Missing $cmd"
 done
-[[ -d "$REPO/.git" && -f "$BIN/prepare_release.py" ]] ||
+[[ -d "$REPO/.git" && -f "$BIN/prepare_release.py" && -f "$BIN/ci_gate.py" ]] ||
   die "Missing deploy installation; run install-ecs-ci.sh"
 [[ "$(git -C "$REPO" remote get-url origin)" == "$REMOTE" ]] ||
   die "Unexpected git remote; refusing deployment"
@@ -70,24 +70,8 @@ curl -fSLsS --connect-timeout 8 --max-time 30 --retry 2 --retry-delay 2 \
   -H "Accept: application/vnd.github+json" \
   "$ACTIONS?event=push&branch=main&head_sha=$sha&per_page=50" \
   -o "$tmp/ci.json" || die "CI API unavailable; skip deployment"
-decision="$(python3 - "$sha" "$tmp/ci.json" <<'PY'
-import json,sys
-sha=sys.argv[1]
-with open(sys.argv[2],encoding="utf-8") as f:
-    doc=json.load(f)
-runs=[r for r in doc.get("workflow_runs",[]) if
-      r.get("head_sha")==sha and r.get("event")=="push" and
-      r.get("head_branch")=="main"]
-if not runs:
-    print("waiting: no push CI found")
-else:
-    run=max(runs,key=lambda r:(int(r.get("id",0)),int(r.get("run_attempt",0))))
-    if run.get("status")=="completed" and run.get("conclusion")=="success":
-        print("approved")
-    else:
-        print("waiting: "+str(run.get("status"))+"/"+str(run.get("conclusion")))
-PY
-)" || die "Could not parse CI API response"
+decision="$(python3 "$BIN/ci_gate.py" "$sha" "$tmp/ci.json")" ||
+  die "Could not parse CI API response"
 if [[ "$decision" != approved ]]; then
   log "Not deploying $sha ($decision)"
   exit 0
