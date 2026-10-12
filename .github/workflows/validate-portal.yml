@@ -45,7 +45,7 @@ jobs:
       - name: Test release preparation and CI gating
         run: |
           python3 -m unittest discover -s tests -p 'test_*.py' -v
-          grep -q 'OnUnitInactiveSec=5min' ops/systemd/game-portal-deploy.timer
+          grep -q 'OnUnitInactiveSec=3min' ops/systemd/game-portal-deploy.timer
           grep -q 'ExecStart=/opt/game-portal/bin/deploy.sh' ops/systemd/game-portal-deploy.service
       - name: Static HTTP smoke check
         run: |
