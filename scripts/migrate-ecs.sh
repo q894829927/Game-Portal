@@ -172,7 +172,8 @@ chmod -R a+rX "$release"
 if command -v getenforce >/dev/null && [[ "$(getenforce)" == Enforcing ]]; then
   log "SELinux Enforcing detected; preparing Nginx-readable Portal files."
   if command -v semanage >/dev/null && command -v restorecon >/dev/null; then
-    if ! semanage fcontext -l | grep -Fq '/var/www/game-portal(/.*)?'; then
+    semanage fcontext -l > "$tmp/selinux-contexts"
+    if ! grep -Fq '/var/www/game-portal(/.*)?' "$tmp/selinux-contexts"; then
       semanage fcontext -a -t httpd_sys_content_t '/var/www/game-portal(/.*)?'
       touch "$BACKUP/added-selinux-policy"
     fi
