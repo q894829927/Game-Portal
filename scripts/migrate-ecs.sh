@@ -57,6 +57,12 @@ rollback_internal() {
     mv -Tf "$PORTAL/.current-rollback" "$PORTAL/current"
   fi
   reload_nginx
+  if [[ -f "$BACKUP/added-selinux-policy" ]] && command -v semanage >/dev/null; then
+    semanage fcontext -d '/var/www/game-portal(/.*)?' || log "WARN: remove added SELinux policy manually"
+    if command -v restorecon >/dev/null; then
+      restorecon -RF "$PORTAL" || true
+    fi
+  fi
   log "Rollback completed; check / and /health."
 }
 die() {
@@ -128,6 +134,9 @@ else
   printf 'NONE\n' > "$BACKUP/previous-portal"
 fi
 log "Backup snapshot: $BACKUP"
+# Once an original config and portal symlink are recorded, every later
+# failure (including a permissions or network error) is recoverable.
+STAGED=1
 
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
@@ -156,6 +165,25 @@ for name in ("favicon","rift-art","tactics-art"):
 p.write_text(s)
 PY
 chmod -R a+rX "$release"
+
+# The original Rift installer labels only /var/www/rift for Nginx under
+# enforcing SELinux; the new independent Game-Portal directory needs its own
+# httpd_sys_content_t context before reloading Nginx.
+if command -v getenforce >/dev/null && [[ "$(getenforce)" == Enforcing ]]; then
+  log "SELinux Enforcing detected; preparing Nginx-readable Portal files."
+  if command -v semanage >/dev/null && command -v restorecon >/dev/null; then
+    if ! semanage fcontext -l | grep -Fq '/var/www/game-portal(/.*)?'; then
+      semanage fcontext -a -t httpd_sys_content_t '/var/www/game-portal(/.*)?'
+      touch "$BACKUP/added-selinux-policy"
+    fi
+    restorecon -RF "$PORTAL"
+  elif command -v chcon >/dev/null; then
+    chcon -R -t httpd_sys_content_t "$PORTAL"
+    log "WARN: SELinux chcon label is temporary. For persistence install semanage and add a file-context rule."
+  else
+    die "SELinux is enforcing; semanage/restorecon or chcon is required to label the Portal directory."
+  fi
+fi
 
 cat > "$SNIPPET" <<'NGINX'
 # Preserve existing Colyseus /health, matchmaking, WS, and Rift /assets/ routes.
