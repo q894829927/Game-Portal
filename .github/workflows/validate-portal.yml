@@ -1,0 +1,52 @@
+name: Validate Portal
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  static-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check migration syntax and browser JS
+        run: |
+          bash -n scripts/migrate-ecs.sh
+          node --check app.js
+          node --check config.js
+      - name: Check site files and referenced artwork
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('index.html').read_text()
+          css = Path('styles.css').read_text()
+          assert 'id="rift-enter"' in html
+          assert '/games/rift/' in Path('config.js').read_text()
+          assert '@media(max-width:750px)' in css
+          for path in ('assets/favicon.svg','assets/rift-art.svg','assets/tactics-art.svg'):
+              text=Path(path).read_text()
+              assert '<svg' in text and '</svg>' in text
+              assert './'+path in html
+          assert 'migrate-ecs.sh' in Path('docs/DEPLOY.md').read_text()
+          PY
+      - name: Static HTTP smoke check
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/game-portal-http.log 2>&1 &
+          python3 - <<'PY'
+          from urllib.request import urlopen
+          import time
+          for i in range(15):
+              try:
+                  with urlopen("http://127.0.0.1:8765/") as response:
+                      data=response.read().decode()
+                  assert 'id="rift-enter"' in data
+                  break
+              except OSError:
+                  time.sleep(.2)
+          else:
+              raise SystemExit("Portal did not start")
+          for path in ('styles.css','app.js','config.js','assets/rift-art.svg','assets/tactics-art.svg'):
+              with urlopen('http://127.0.0.1:8765/'+path) as response:
+                  assert response.status == 200
+          PY
