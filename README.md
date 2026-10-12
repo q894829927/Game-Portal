@@ -1,41 +1,30 @@
 # Game-Portal · 独立静态游戏大厅
 
-一个无构建、零依赖的暗黑奇幻风格网页首页，用于未来集中展示独立游戏。
+无构建、零依赖的暗黑奇幻风格游戏选择页，位于 ECS 根路径 `/`，独立于两个游戏仓库。
 
-## 当前入口
+## 已开放的入口
 
-- **异界共振**：多人联机 Roguelike，正式上线后预期路由 `/games/rift/`。
-- **未命名战棋**：原创奇幻回合制战棋，仅在首页展示概念和计划（不伪装成已上线）。
+- **[异界共振](https://github.com/q894829927/Rift-Resonance)**：多人 Roguelike，路径 `/games/rift/`。
+- **[未命名战棋](https://github.com/q894829927/Tactics-Game)**：已开放原创奇幻回合制战棋**单机原型**，路径 `/games/tactics/`；目前为 10×8 地图、4v6 单关卡，角色成长、更多关卡及正式美术仍在开发中。
 
-## 本地预览
+## 生产发布
 
-在项目根目录执行：
+门户独立使用 GitHub Actions 验证和 ECS `game-portal-deploy.timer` 每约 5 分钟检查 `main` 已通过 CI 的提交。更新首页、游戏链接及素材后只需提交并推送到 `main`。
+
+- [门户 ECS 独立部署与回滚](docs/PORTAL-AUTO-DEPLOY.md)
+- [GitHub CI](.github/workflows/validate-portal.yml)
+- [游戏大厅首次迁移记录](docs/DEPLOY.md)
+
+**不要再次执行** `scripts/migrate-ecs.sh apply`，也不要更改《异界共振》或战棋的现有自动部署任务。
+
+## 本地预览（可选）
 
 ```bash
 python -m http.server 5173
 ```
 
-打开 `http://localhost:5173/`。直接打开 `index.html` 也可显示页面，但最好通过 HTTP 服务器验证。
+打开 `http://localhost:5173/`。网站入口：编辑 `config.js` 中的 `riftUrl` 与 `tacticsUrl`；页面文字、游戏卡片编辑 `index.html`；配色与布局编辑 `styles.css`。游戏示意插画位于 `assets/`，不包含其他商业游戏的官方素材。
 
-## 自定义
+## 研发安排
 
-- 游戏链接：编辑 `config.js` 的 `riftUrl`。
-- 标题、介绍、游戏卡片：编辑 `index.html`。
-- 配色及布局：编辑 `styles.css`。
-- 两张游戏原创矢量宣传图：`assets/rift-art.svg`、`assets/tactics-art.svg`。两张图均为本项目创建的示意性装饰图，不含任何《火焰纹章》官方角色、徽记或贴图。
-
-## 新战棋最小可玩提案
-
-- 地图：10×8 方格、基础地形和移动范围高亮。
-- 单关卡：4 名可控角色、6 名敌人，胜利与失败目标。
-- 战斗：玩家回合/敌方回合、移动、攻击、反击、命中/伤害预览、地形加成。
-- 成长：职业定位、经验升级、可复用的配置表。
-- 后续再增加章节、剧情、招募、装备和多人模式，不在首页阶段提前开发。
-
-## 生产部署
-
-请先读 **[docs/DEPLOY.md](docs/DEPLOY.md)**。在 `Rift-Resonance` 尚占据 ECS 根路径时，**不要直接把本站复制到 ECS 网站根目录**，否则会覆盖现有游戏入口。
-
-## 仓库建议
-
-本项目位于 `q894829927/Game-Portal`。新战棋建议另建 `q894829927/Tactics-Game`（尚未创建）。`Rift-Resonance` 保持独立。
+战棋仍作为独立仓库推进战斗预览、成长、角色职业、装备、章节内容。游戏大厅仅显示真实可玩的阶段，不将尚未实现的玩法标记为完成。

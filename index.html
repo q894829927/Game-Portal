@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#080d16" />
-  <meta name="description" content="独立游戏大厅。进入多人割草游戏《异界共振》，或探索正在开发的原创策略战棋。" />
+  <meta name="description" content="独立游戏大厅。体验多人割草游戏《异界共振》，或试玩原创回合制战棋原型。" />
   <title>游戏大厅 · 选择你的下一场冒险</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="./styles.css" />
@@ -20,7 +20,7 @@
       </a>
       <nav class="topnav" aria-label="主导航">
         <a class="active" href="#worlds">游戏世界</a>
-        <a href="#tactics">开发计划</a>
+        <a href="#tactics">战棋进度</a>
       </nav>
       <span class="topbar-right"><span class="live-dot" aria-hidden="true"></span> 持续创造中</span>
     </header>
@@ -47,7 +47,7 @@
       <section class="worlds-section container" id="worlds" aria-labelledby="worlds-title">
         <div class="section-heading">
           <div><div class="section-kicker">CHOOSE YOUR WORLD <span>— 001</span></div><h2 id="worlds-title">可探索的世界<span class="heading-dot">.</span></h2></div>
-          <div class="world-count">01 <span>/ 02</span><small>现已开放</small></div>
+          <div class="world-count">02 <span>/ 02</span><small>现已可体验</small></div>
         </div>
         <div class="game-grid">
           <article class="game-card game-card--rift">
@@ -64,26 +64,26 @@
           </article>
           <article class="game-card game-card--tactics">
             <div class="game-art"><img src="./assets/tactics-art.svg" alt="原创像素风格策略战棋场景概念插画，包含格子地图、旗帜和角色棋子" loading="eager" />
-              <div class="art-topline"><span class="serial">WORLD // 002</span><span class="status status--soon">构思开发中</span></div>
+              <div class="art-topline"><span class="serial">WORLD // 002</span><span class="status status--online"><i aria-hidden="true"></i> 原型已开放</span></div>
               <span class="art-bottomline" aria-hidden="true">T A C T I C S &nbsp; / &nbsp; C H R O N I C L E S</span>
             </div>
             <div class="card-content">
-              <div class="card-overline"><span>回合制</span><b>•</b><span>策略战棋</span><b>•</b><span>角色成长</span></div>
+              <div class="card-overline"><span>回合制</span><b>•</b><span>策略战棋</span><b>•</b><span>单机原型</span></div>
               <h3>未命名战棋 <span class="concept-label">WORKING TITLE</span></h3>
-              <p>在格子战场上移动、布阵、交锋。结合地形、职业与单位成长，打造一段原创的战术冒险。</p>
-              <div class="card-footer"><span class="platform-tag"><span aria-hidden="true">◇</span> WEB · TURN-BASED</span><a class="action action--outline" href="#tactics" aria-label="了解新战棋游戏的开发计划">查看构想 <span aria-hidden="true">↓</span></a></div>
+              <p>首个单机关卡已开放试玩：在 10 × 8 地形战场指挥 4 名友军，与 6 名敌人展开移动、攻击和反击。</p>
+              <div class="card-footer"><span class="platform-tag"><span aria-hidden="true">◇</span> WEB · TURN-BASED</span><a class="action action--primary" id="tactics-enter" href="/games/tactics/" aria-label="试玩未命名战棋原型">试玩原型 <span aria-hidden="true">↗</span></a></div>
             </div>
           </article>
         </div>
       </section>
 
       <section class="tactics-section container" id="tactics" aria-labelledby="tactics-title">
-        <div class="tactics-intro"><div class="section-kicker">IN DEVELOPMENT <span>— 002</span></div><h2 id="tactics-title">下一个世界，<br/><em>由策略决定命运。</em></h2>
-        <p>第二款游戏将以原创奇幻战棋为方向，参考经典日式回合制战术游戏的玩法结构，优先做一张能完整游玩的地图，而不是一开始就堆大量角色和剧情。</p></div>
+        <div class="tactics-intro"><div class="section-kicker">PLAYABLE PROTOTYPE <span>— 002</span></div><h2 id="tactics-title">新的战场已开启，<br/><em>由策略决定命运。</em></h2>
+        <p>首个原创战棋原型已开放：单机 10 × 8 地形战场、4 名友军与 6 名敌人，包含移动、攻击、反击、敌方行动和胜负判定。仍在持续开发，经验成长、装备及后续关卡尚未加入。</p></div>
         <div class="milestones" aria-label="战棋游戏最小可玩目标">
-          <div class="milestone"><span class="milestone-num">01 / MAP</span><strong>格子地图</strong><p>10 × 8 战场，移动范围预览，森林、丘陵与道路地形。</p></div>
-          <div class="milestone"><span class="milestone-num">02 / BATTLE</span><strong>回合交锋</strong><p>4 名友军对抗 6 名敌人，移动、攻击、反击和战斗预测。</p></div>
-          <div class="milestone"><span class="milestone-num">03 / GROWTH</span><strong>角色成长</strong><p>经验升级、职业差异与一关完整胜利目标。</p></div>
+          <div class="milestone"><span class="milestone-num">01 / MAP · 已实现</span><strong>格子地图</strong><p>10 × 8 战场、移动范围预览、平地、树林、丘陵与障碍。</p></div>
+          <div class="milestone"><span class="milestone-num">02 / BATTLE · 已实现</span><strong>回合交锋</strong><p>4 名友军对抗 6 名敌人，移动、攻击、反击和敌方回合。</p></div>
+          <div class="milestone"><span class="milestone-num">03 / GROWTH · 开发中</span><strong>角色成长</strong><p>后续增加经验升级、装备、职业成长与更多关卡。</p></div>
         </div>
       </section>
 

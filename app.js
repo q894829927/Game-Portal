@@ -1,8 +1,14 @@
 (() => {
   'use strict';
-  const link = document.getElementById('rift-enter');
-  const configured = window.GAME_PORTAL_CONFIG?.riftUrl;
-  if (link && typeof configured === 'string' && configured.startsWith('/') && !configured.startsWith('//')) {
-    link.href = configured;
+  const config = window.GAME_PORTAL_CONFIG;
+  for (const [id, route] of [
+    ['rift-enter', config?.riftUrl],
+    ['tactics-enter', config?.tacticsUrl]
+  ]) {
+    const link = document.getElementById(id);
+    if (link && typeof route === 'string' &&
+        route.startsWith('/') && !route.startsWith('//')) {
+      link.href = route;
+    }
   }
 })();
