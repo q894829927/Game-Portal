@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#080d16" />
+  <meta name="description" content="独立游戏大厅。进入多人割草游戏《异界共振》，或探索正在开发的原创策略战棋。" />
+  <title>游戏大厅 · 选择你的下一场冒险</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="./config.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar container" id="top">
+      <a class="brand" href="#top" aria-label="游戏大厅首页">
+        <span class="brand-mark" aria-hidden="true"><span class="brand-mark-core"></span></span>
+        <span class="brand-copy"><strong>WORLD <span>/</span> SELECT</strong><small>独立游戏实验室</small></span>
+      </a>
+      <nav class="topnav" aria-label="主导航">
+        <a class="active" href="#worlds">游戏世界</a>
+        <a href="#tactics">开发计划</a>
+      </nav>
+      <span class="topbar-right"><span class="live-dot" aria-hidden="true"></span> 持续创造中</span>
+    </header>
+
+    <main>
+      <section class="hero container" aria-labelledby="hero-title">
+        <div class="hero-left">
+          <div class="eyebrow"><span class="eyebrow-line"></span> THE GATE IS OPEN <span class="eyebrow-end">/ 2026</span></div>
+          <h1 id="hero-title">每一次选择，<br/>都是<span class="hero-highlight">新的冒险<span class="hero-period">。</span></span></h1>
+          <p>从混沌裂隙中的多人战斗，到运筹帷幄的回合制战棋。<br class="desktop-br"/>选择一扇门，进入属于你的世界。</p>
+          <a class="explore-link" href="#worlds">探索游戏世界 <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="hero-decoration" aria-hidden="true">
+          <div class="hero-compass">
+            <div class="compass-dash"></div><div class="compass-cross"></div>
+            <span class="compass-n">N</span><span class="compass-e">E</span><span class="compass-s">S</span><span class="compass-w">W</span>
+            <span class="compass-center"></span>
+          </div>
+          <span class="hero-seal-text">EXPLORE<br/>BEYOND</span>
+        </div>
+        <div class="hero-bottom"><span>01 / 选择世界</span><span>SCROLL TO EXPLORE <span aria-hidden="true">↓</span></span></div>
+      </section>
+
+      <section class="worlds-section container" id="worlds" aria-labelledby="worlds-title">
+        <div class="section-heading">
+          <div><div class="section-kicker">CHOOSE YOUR WORLD <span>— 001</span></div><h2 id="worlds-title">可探索的世界<span class="heading-dot">.</span></h2></div>
+          <div class="world-count">01 <span>/ 02</span><small>现已开放</small></div>
+        </div>
+        <div class="game-grid">
+          <article class="game-card game-card--rift">
+            <div class="game-art"><img src="./assets/rift-art.svg" alt="紫色奇点与暗黑魔法能量环绕的异界场景插画" loading="eager" />
+              <div class="art-topline"><span class="serial">WORLD // 001</span><span class="status status--online"><i aria-hidden="true"></i> 现已开放</span></div>
+              <span class="art-bottomline" aria-hidden="true">R I F T &nbsp; R E S O N A N C E</span>
+            </div>
+            <div class="card-content">
+              <div class="card-overline"><span>多人联机</span><b>•</b><span>暗黑奇幻</span><b>•</b><span>Roguelike</span></div>
+              <h3>异界共振</h3>
+              <p>穿越裂隙，选择武器与祝福。和伙伴一起迎战不断涌来的怪潮，构筑属于自己的战斗流派。</p>
+              <div class="card-footer"><span class="platform-tag"><span aria-hidden="true">◈</span> WEB · MULTIPLAYER</span><a class="action action--primary" id="rift-enter" href="/games/rift/" aria-label="进入异界共振">进入游戏 <span aria-hidden="true">↗</span></a></div>
+            </div>
+          </article>
+          <article class="game-card game-card--tactics">
+            <div class="game-art"><img src="./assets/tactics-art.svg" alt="原创像素风格策略战棋场景概念插画，包含格子地图、旗帜和角色棋子" loading="eager" />
+              <div class="art-topline"><span class="serial">WORLD // 002</span><span class="status status--soon">构思开发中</span></div>
+              <span class="art-bottomline" aria-hidden="true">T A C T I C S &nbsp; / &nbsp; C H R O N I C L E S</span>
+            </div>
+            <div class="card-content">
+              <div class="card-overline"><span>回合制</span><b>•</b><span>策略战棋</span><b>•</b><span>角色成长</span></div>
+              <h3>未命名战棋 <span class="concept-label">WORKING TITLE</span></h3>
+              <p>在格子战场上移动、布阵、交锋。结合地形、职业与单位成长，打造一段原创的战术冒险。</p>
+              <div class="card-footer"><span class="platform-tag"><span aria-hidden="true">◇</span> WEB · TURN-BASED</span><a class="action action--outline" href="#tactics" aria-label="了解新战棋游戏的开发计划">查看构想 <span aria-hidden="true">↓</span></a></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="tactics-section container" id="tactics" aria-labelledby="tactics-title">
+        <div class="tactics-intro"><div class="section-kicker">IN DEVELOPMENT <span>— 002</span></div><h2 id="tactics-title">下一个世界，<br/><em>由策略决定命运。</em></h2>
+        <p>第二款游戏将以原创奇幻战棋为方向，参考经典日式回合制战术游戏的玩法结构，优先做一张能完整游玩的地图，而不是一开始就堆大量角色和剧情。</p></div>
+        <div class="milestones" aria-label="战棋游戏最小可玩目标">
+          <div class="milestone"><span class="milestone-num">01 / MAP</span><strong>格子地图</strong><p>10 × 8 战场，移动范围预览，森林、丘陵与道路地形。</p></div>
+          <div class="milestone"><span class="milestone-num">02 / BATTLE</span><strong>回合交锋</strong><p>4 名友军对抗 6 名敌人，移动、攻击、反击和战斗预测。</p></div>
+          <div class="milestone"><span class="milestone-num">03 / GROWTH</span><strong>角色成长</strong><p>经验升级、职业差异与一关完整胜利目标。</p></div>
+        </div>
+      </section>
+
+      <section class="bottom-callout container" aria-label="游戏大厅说明"><span class="asterisk" aria-hidden="true">✳</span><p>这里不是终点，<strong>只是所有故事的入口。</strong></p><a href="#top">返回顶部 <span aria-hidden="true">↑</span></a></section>
+    </main>
+    <footer class="footer container"><div><span class="footer-symbol" aria-hidden="true">✦</span> 独立游戏实验室</div><span>原创世界 · 持续更新</span><span>© 2026 WORLD / SELECT</span></footer>
+  </div>
+</body>
+</html>
