@@ -1,8 +1,12 @@
-# 部署顺序（必须按顺序）
+# 首次 Nginx 路由迁移记录（已完成）
+
+> **当前状态：** 用户提供的 ECS 日志显示 `migrate-ecs.sh apply` 于 2026-10-12 成功，Portal `/`、Rift `/games/rift/` 和 `/health` 的 HTTP 检查通过；用户随后确认双人联机正常。**无需也不应再次执行初次迁移。** 今后 Game-Portal 更新请参照 [独立 CI/CD 安装说明](PORTAL-AUTO-DEPLOY.md)，只安装 `game-portal-deploy.timer`。
+
+以下保留历史迁移步骤，仅作为维护与回滚参考。
 
 > **2026-10-12 根据实际部署包核对：** 上传的 `rift-ecs-deploy-kit-fixed(1).zip` 内 `install.sh` 会将 Nginx 站点安装为 `/etc/nginx/conf.d/rift.conf`。该 `rift.conf` 已定义 `location = /index.html`，因此迁移脚本已改为修改原位置的 document root，**不再重复声明这个 location**。实际 ECS 可能在安装后被手动修改，仍以 `sudo nginx -T` 的实时输出为准。原 `location /assets/`、`location @rift_backend` 与游戏后端 2567 的代理规则保留。**不可重新运行 install.sh 来迁移门户**，因为安装器会覆盖站点配置并重新部署游戏。
 
-**当前 ECS 根路径 `/` 已是《异界共振》，不要直接把本静态首页覆盖到 `/`。**
+**历史提醒：迁移之前，ECS 根路径 `/` 是《异界共振》。现在已迁移为 Game-Portal。**
 
 ## 安全顺序
 
@@ -50,7 +54,7 @@ sudo bash scripts/migrate-ecs.sh preflight --site /etc/nginx/conf.d/rift.conf --
 sudo bash scripts/migrate-ecs.sh apply --site /etc/nginx/conf.d/rift.conf --host 47.119.122.133
 ```
 
-脚本先把旧 Nginx 配置备份至 `/var/backups/game-portal-migration/<UTC时间>`，然后克隆 Game-Portal 到独立发布目录，生成 `/portal-assets/` 图片路径，设置门户软链接，增加 Nginx include。通过 `nginx -t` 后 reload 并检查门户、游戏新路径、原 Vite `/assets/` 文件的逐字节完整性和 `/health`。失败则尝试自动回滚。
+脚本先把旧 Nginx 配置备份至 `/var/backups/game-portal-migration/<UTC时间>`，然后将 Game-Portal 的文件放入独立发布目录，生成 `/portal-assets/` 图片路径，设置门户软链接，增加 Nginx include。通过 `nginx -t` 后 reload 并检查门户、游戏新路径、原 Vite `/assets/` 文件的逐字节完整性和 `/health`。失败则尝试自动回滚。
 
 **人工验收**：打开 `http://47.119.122.133/` 和 `http://47.119.122.133/games/rift/`，用两个浏览器创建/加入 Colyseus 房间并实际测试 WebSocket、移动与升级；HTTP 冒烟检查不能替代联机实测。
 
@@ -60,7 +64,7 @@ sudo bash scripts/migrate-ecs.sh apply --site /etc/nginx/conf.d/rift.conf --host
 sudo bash scripts/migrate-ecs.sh rollback --backup /var/backups/game-portal-migration/实际备份时间
 ```
 
-本脚本**尚未在你的 ECS 上执行**。若站点有多个 server、已经有 `location = /` 或 Nginx 校验不通过，必须暂停并检查实际配置，不能强行执行。由于原游戏仍使用绝对路径 `/assets/`，这是兼容现有发布链路的过渡方案；未来第二款游戏建议独立设置 Vite `base`。
+历史记录：该脚本已在 ECS 执行成功。若站点有多个 server、已经有 `location = /` 或 Nginx 校验不通过，必须暂停并检查实际配置，不能强行执行。由于原游戏仍使用绝对路径 `/assets/`，这是兼容现有发布链路的过渡方案；未来第二款游戏建议独立设置 Vite `base`。
 
 
 ### 与原安装包确认一致的事实
