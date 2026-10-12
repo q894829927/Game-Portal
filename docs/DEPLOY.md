@@ -69,3 +69,20 @@ sudo bash scripts/migrate-ecs.sh rollback --backup /var/backups/game-portal-migr
 - `deploy.sh` 仅更改 `/opt/rift/current` 与 `/var/www/rift/current` 两个软链接，不覆盖门户的 `/var/www/game-portal/current`，所以它的定时更新可继续工作。
 - 游戏前端使用 `VITE_SERVER_URL=http://47.119.122.133`（构建时注入），故新路径下仍向站点根路径请求联机与健康接口。当前 Nginx 的 `@rift_backend` 继续代理这些请求。
 - **兼容式迁移**：不急于修改原 Vite `base`；游戏的 `/assets/` 必须由原网站目录响应，而门户自己的 SVG 使用独立的 `/portal-assets/`。后续独立新游戏必须配置新的静态资源基础路径。
+
+
+### 更新：不再在迁移过程中克隆 GitHub（2026-10-12）
+
+先前 `apply` 曾在再次执行 `git clone https://github.com/q894829927/Game-Portal.git` 时收到 `Failure when receiving data from the peer`，脚本成功回滚。修正版改为从当前脚本所在的 **Game-Portal 本地 Git 仓库** 用 `git archive HEAD` 发布已提交文件：**执行 apply 本身无需访问 GitHub**。避免临时 GitHub 连接异常造成迁移失败。
+
+在 ECS 操作时先更新本地代码：
+
+```bash
+cd /root/Game-Portal
+git pull --ff-only origin main
+bash -n scripts/migrate-ecs.sh
+bash scripts/migrate-ecs.sh preflight --site /etc/nginx/conf.d/rift.conf --host 47.119.122.133
+bash scripts/migrate-ecs.sh apply --site /etc/nginx/conf.d/rift.conf --host 47.119.122.133
+```
+
+注意：`git pull` 本身仍需要访问 GitHub；但是如果它失败，不要继续使用旧版脚本。可等待网络恢复后重试。新脚本明确校验本地仓库远程来源、当前 `main` 分支和工作区是否干净；不会读取未提交的改动。新脚本继续打印备份目录并自动回滚。出现网页返回错误时，现在会记录具体 HTTP 状态、页面响应片段及 Nginx 错误日志。
