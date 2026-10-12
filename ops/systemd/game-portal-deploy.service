@@ -1,0 +1,21 @@
+[Unit]
+Description=Game-Portal CI-gated ECS static site deployment
+Wants=network-online.target
+After=network-online.target
+ConditionPathExists=/etc/nginx/snippets/game-portal-routes.conf
+
+[Service]
+Type=oneshot
+User=root
+EnvironmentFile=-/etc/default/game-portal-deploy
+ExecStart=/opt/game-portal/bin/deploy.sh
+TimeoutStartSec=240
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+[Install]
+WantedBy=multi-user.target
