@@ -4,6 +4,9 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   static-validation:
     runs-on: ubuntu-latest
@@ -12,6 +15,9 @@ jobs:
       - name: Check migration syntax and browser JS
         run: |
           bash -n scripts/migrate-ecs.sh
+          bash -n scripts/deploy-portal-ecs.sh
+          bash -n scripts/install-ecs-ci.sh
+          python3 -m py_compile scripts/prepare_release.py scripts/ci_gate.py
           node --check app.js
           node --check config.js
       - name: Check site files and referenced artwork
@@ -30,6 +36,11 @@ jobs:
               assert './'+path in html
           assert 'migrate-ecs.sh' in Path('docs/DEPLOY.md').read_text()
           PY
+      - name: Test release preparation and CI gating
+        run: |
+          python3 -m unittest discover -s tests -p 'test_*.py' -v
+          grep -q 'OnUnitInactiveSec=5min' ops/systemd/game-portal-deploy.timer
+          grep -q 'ExecStart=/opt/game-portal/bin/deploy.sh' ops/systemd/game-portal-deploy.service
       - name: Static HTTP smoke check
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/game-portal-http.log 2>&1 &
