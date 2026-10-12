@@ -1,0 +1,11 @@
+[Unit]
+Description=Poll approved Game-Portal releases every five minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitInactiveSec=5min
+AccuracySec=30s
+Unit=game-portal-deploy.service
+
+[Install]
+WantedBy=timers.target
