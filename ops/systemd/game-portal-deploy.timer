@@ -1,9 +1,9 @@
 [Unit]
-Description=Poll approved Game-Portal releases every five minutes
+Description=Poll approved Game-Portal releases every three minutes
 
 [Timer]
 OnBootSec=2min
-OnUnitInactiveSec=5min
+OnUnitInactiveSec=3min
 AccuracySec=30s
 Unit=game-portal-deploy.service
 
