@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#080d16" />
-  <meta name="description" content="原创独立游戏大厅：体验《异界共振》双武器合作生存原型，或试玩 Wildfield Tactics 回合制战棋。" />
-  <title>游戏大厅 · 选择你的下一场冒险</title>
+  <meta name="theme-color" content="#090e16" />
+  <meta name="description" content="Game Portal 游戏大厅：进入《异界共振》或 Wildfield Tactics。" />
+  <title>游戏大厅 · World / Select</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="./styles.css" />
   <script src="./config.js" defer></script>
@@ -13,83 +13,54 @@
 </head>
 <body>
   <div class="site-shell">
-    <header class="topbar container" id="top">
-      <a class="brand" href="#top" aria-label="游戏大厅首页">
-        <span class="brand-mark" aria-hidden="true"><span class="brand-mark-core"></span></span>
-        <span class="brand-copy"><strong>WORLD <span>/</span> SELECT</strong><small>独立游戏实验室</small></span>
+    <header class="topbar container">
+      <a class="brand" href="/" aria-label="游戏大厅首页">
+        <span class="brand-symbol" aria-hidden="true">✧</span>
+        <span>WORLD <span class="brand-separator">/</span> SELECT</span>
       </a>
-      <nav class="topnav" aria-label="主导航">
-        <a class="active" href="#worlds">游戏世界</a>
-        <a href="#tactics">战棋进度</a>
-      </nav>
-      <span class="topbar-right"><span class="live-dot" aria-hidden="true"></span> 持续创造中</span>
+      <span class="topbar-label">独立游戏</span>
     </header>
 
-    <main>
-      <section class="hero container" aria-labelledby="hero-title">
-        <div class="hero-left">
-          <div class="eyebrow"><span class="eyebrow-line"></span> THE GATE IS OPEN <span class="eyebrow-end">/ 2026</span></div>
-          <h1 id="hero-title">每一次选择，<br/>都是<span class="hero-highlight">新的冒险<span class="hero-period">。</span></span></h1>
-          <p>从混沌裂隙中的多人战斗，到运筹帷幄的回合制战棋。<br class="desktop-br"/>选择一扇门，进入属于你的世界。</p>
-          <a class="explore-link" href="#worlds">探索游戏世界 <span aria-hidden="true">↗</span></a>
-        </div>
-        <div class="hero-decoration" aria-hidden="true">
-          <div class="hero-compass">
-            <div class="compass-dash"></div><div class="compass-cross"></div>
-            <span class="compass-n">N</span><span class="compass-e">E</span><span class="compass-s">S</span><span class="compass-w">W</span>
-            <span class="compass-center"></span>
+    <main class="main container">
+      <div class="page-heading">
+        <p class="eyebrow">GAME PORTAL</p>
+        <h1>选择游戏<span class="heading-mark">.</span></h1>
+      </div>
+
+      <section class="game-grid" aria-label="可体验的游戏">
+        <a class="game-card game-card--rift" id="rift-enter" href="/games/rift/" aria-label="进入异界共振">
+          <img src="./assets/rift-art.svg" alt="" loading="eager" />
+          <div class="card-shade" aria-hidden="true"></div>
+          <div class="card-top">
+            <span class="card-index">01</span>
+            <span class="card-type">多人 · Roguelike</span>
           </div>
-          <span class="hero-seal-text">EXPLORE<br/>BEYOND</span>
-        </div>
-        <div class="hero-bottom"><span>01 / 选择世界</span><span>SCROLL TO EXPLORE <span aria-hidden="true">↓</span></span></div>
-      </section>
+          <div class="card-bottom">
+            <div class="card-name">
+              <h2>异界共振</h2>
+              <p>合作生存</p>
+            </div>
+            <span class="card-arrow" aria-hidden="true">↗</span>
+          </div>
+        </a>
 
-      <section class="worlds-section container" id="worlds" aria-labelledby="worlds-title">
-        <div class="section-heading">
-          <div><div class="section-kicker">CHOOSE YOUR WORLD <span>— 001</span></div><h2 id="worlds-title">可探索的世界<span class="heading-dot">.</span></h2></div>
-          <div class="world-count">02 <span>/ 02</span><small>现已可体验</small></div>
-        </div>
-        <div class="game-grid">
-          <article class="game-card game-card--rift">
-            <div class="game-art"><img src="./assets/rift-art.svg" alt="紫色奇点与暗黑魔法能量环绕的异界场景插画" loading="eager" />
-              <div class="art-topline"><span class="serial">WORLD // 001</span><span class="status status--online"><i aria-hidden="true"></i> 现已开放</span></div>
-              <span class="art-bottomline" aria-hidden="true">R I F T &nbsp; R E S O N A N C E</span>
+        <a class="game-card game-card--tactics" id="tactics-enter" href="/games/tactics/" aria-label="进入 Wildfield Tactics 战棋原型">
+          <img src="./assets/tactics-art.svg" alt="" loading="eager" />
+          <div class="card-shade" aria-hidden="true"></div>
+          <div class="card-top">
+            <span class="card-index">02</span>
+            <span class="card-type">单机 · 回合制</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-name">
+              <h2>Wildfield Tactics</h2>
+              <p>策略战棋</p>
             </div>
-            <div class="card-content">
-              <div class="card-overline"><span>单人 / 多人联机</span><b>•</b><span>Roguelike</span><b>•</b><span>v0.1.5</span></div>
-              <h3>异界共振</h3>
-              <p>四分钟生存原型：单人或与伙伴组队，开局确认火焰弹与虚空法球。手动选择裂变、余烬、坍缩与锚点分支，迎战怪潮；其余武器仍在开发。</p>
-              <div class="card-footer"><span class="platform-tag"><span aria-hidden="true">◈</span> WEB · MULTIPLAYER</span><a class="action action--primary" id="rift-enter" href="/games/rift/" aria-label="进入异界共振">进入游戏 <span aria-hidden="true">↗</span></a></div>
-            </div>
-          </article>
-          <article class="game-card game-card--tactics">
-            <div class="game-art"><img src="./assets/tactics-art.svg" alt="原创像素风格策略战棋场景概念插画，包含格子地图、旗帜和角色棋子" loading="eager" />
-              <div class="art-topline"><span class="serial">WORLD // 002</span><span class="status status--online"><i aria-hidden="true"></i> 原型已开放</span></div>
-              <span class="art-bottomline" aria-hidden="true">T A C T I C S &nbsp; / &nbsp; C H R O N I C L E S</span>
-            </div>
-            <div class="card-content">
-              <div class="card-overline"><span>回合制战棋</span><b>•</b><span>单机原型</span><b>•</b><span>v0.1.19.5</span></div>
-              <h3>Wildfield Tactics <span class="concept-label">暂定名</span></h3>
-              <p>在 10 × 8 战场指挥 4 名友军迎战 6 名敌人：切换武器、预览路线与攻击范围，体验回合攻防、经验升级和手机触控。</p>
-              <div class="card-footer"><span class="platform-tag"><span aria-hidden="true">◇</span> WEB · TURN-BASED</span><a class="action action--primary" id="tactics-enter" href="/games/tactics/" aria-label="试玩 Wildfield Tactics 战棋原型">试玩原型 <span aria-hidden="true">↗</span></a></div>
-            </div>
-          </article>
-        </div>
+            <span class="card-arrow" aria-hidden="true">↗</span>
+          </div>
+        </a>
       </section>
-
-      <section class="tactics-section container" id="tactics" aria-labelledby="tactics-title">
-        <div class="tactics-intro"><div class="section-kicker">WILDFIELD TACTICS <span>— 002</span></div><h2 id="tactics-title">赤旗要塞已经开战，<br/><em>每一步都影响胜负。</em></h2>
-        <p>当前单机关卡已具备地形加权寻路、鼠标悬停路线与攻击范围预览、战斗预测、武器背包与装备切换，以及角色经验升级。支持手机触控和自动结束我方回合；转职、更多关卡、剧情及存档仍待开发。</p></div>
-        <div class="milestones" aria-label="战棋游戏最小可玩目标">
-          <div class="milestone"><span class="milestone-num">01 / MAP · 已实现</span><strong>路线与地形</strong><p>10 × 8 战场，地形加权寻路；悬停显示移动范围和终点攻击预览。</p></div>
-          <div class="milestone"><span class="milestone-num">02 / BATTLE · 已实现</span><strong>武器与交锋</strong><p>4 对 6 单关卡、16 种武器数据、背包换装、攻击预测与敌方行动。</p></div>
-          <div class="milestone"><span class="milestone-num">03 / GROWTH · 部分实现</span><strong>成长与内容</strong><p>经验升级和属性成长已实现；转职、第二关、剧情与存档尚未开放。</p></div>
-        </div>
-      </section>
-
-      <section class="bottom-callout container" aria-label="游戏大厅说明"><span class="asterisk" aria-hidden="true">✳</span><p>两款游戏仍在持续开发。<strong>页面进度同步至 2026-10-14，未来规划不代表已开放。</strong></p><a href="#top">返回顶部 <span aria-hidden="true">↑</span></a></section>
     </main>
-    <footer class="footer container"><div><span class="footer-symbol" aria-hidden="true">✦</span> 独立游戏实验室</div><span>原创世界 · 持续更新</span><span>© 2026 WORLD / SELECT</span></footer>
   </div>
 </body>
 </html>
