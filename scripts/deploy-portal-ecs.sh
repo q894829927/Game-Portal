@@ -11,6 +11,12 @@ readonly WWW="/var/www/game-portal"
 readonly LIVE="$WWW/current"
 readonly RELEASES="$WWW/releases"
 readonly REMOTE="https://github.com/q894829927/Game-Portal.git"
+# Origin remains HTTPS for source verification. Git reads prefer SSH 443.
+readonly SSH_REMOTE="ssh://git@ssh.github.com:443/q894829927/Game-Portal.git"
+# ProtectHome=true hides /root/.ssh from the systemd deploy service.
+readonly SSH_IDENTITY="/etc/game-portal/ssh/game_portal_deploy"
+readonly SSH_HOSTS="/etc/game-portal/ssh/github_known_hosts"
+readonly SSH_COMMAND="ssh -i $SSH_IDENTITY -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$SSH_HOSTS -o ConnectTimeout=8 -o ConnectionAttempts=1"
 readonly ACTIONS="https://api.github.com/repos/q894829927/Game-Portal/actions/workflows/validate-portal.yml/runs"
 readonly HOST="${PORTAL_HOST:-47.119.122.133}"
 
@@ -28,6 +34,43 @@ done
   die "Missing deploy installation; run install-ecs-ci.sh"
 [[ "$(git -C "$REPO" remote get-url origin)" == "$REMOTE" ]] ||
   die "Unexpected git remote; refusing deployment"
+
+# Never use root's home credentials: systemd ProtectHome=true denies access.
+ssh_enabled=0
+if [[ -f "$SSH_IDENTITY" && -s "$SSH_IDENTITY" &&
+      -f "$SSH_HOSTS" && -s "$SSH_HOSTS" &&
+      ! -L "$SSH_IDENTITY" && ! -L "$SSH_HOSTS" ]]; then
+  command -v ssh >/dev/null || die "SSH credentials installed but ssh is unavailable"
+  ssh_enabled=1
+  log "Git transport: SSH 443 primary, HTTPS fallback"
+else
+  log "Git transport: HTTPS (portal SSH deploy credentials not installed)"
+fi
+
+# Pass explicit URLs instead of 'origin': its configured HTTPS URL is retained
+# only as a repository identity check, never implicitly used for SSH reads.
+git_remote_main() {
+  if (( ssh_enabled )); then
+    if timeout 30 env GIT_SSH_COMMAND="$SSH_COMMAND" \
+      git -C "$REPO" ls-remote "$SSH_REMOTE" refs/heads/main; then
+      return 0
+    fi
+    log "WARN: SSH 443 main lookup failed; using HTTPS fallback" >&2
+  fi
+  timeout 45 git -C "$REPO" ls-remote "$REMOTE" refs/heads/main
+}
+git_fetch_main() {
+  if (( ssh_enabled )); then
+    if timeout 90 env GIT_SSH_COMMAND="$SSH_COMMAND" \
+      git -C "$REPO" fetch --no-tags --depth 1 "$SSH_REMOTE" refs/heads/main; then
+      log "main fetched over SSH 443"
+      return 0
+    fi
+    log "WARN: SSH 443 main fetch failed; using HTTPS fallback" >&2
+  fi
+  timeout 90 git -C "$REPO" fetch --no-tags --depth 1 "$REMOTE" refs/heads/main
+}
+
 
 exec 9>/run/lock/game-portal-deploy.lock
 flock -n 9 || { log "Already deploying; skip"; exit 0; }
@@ -53,8 +96,8 @@ finish() {
 trap finish EXIT
 
 # Fail closed on GitHub outages: the previous Portal remains online.
-remote="$(timeout 45 git -C "$REPO" ls-remote origin refs/heads/main)" ||
-  die "Could not reach GitHub; old Portal remains live"
+remote="$(git_remote_main)" ||
+  die "GitHub main unreachable over SSH and HTTPS; old Portal remains live"
 sha="$(printf '%s\n' "$remote" | awk '{print $1}')"
 [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || die "Invalid GitHub main SHA"
 
@@ -78,8 +121,8 @@ if [[ "$decision" != approved ]]; then
 fi
 log "Approved by Game-Portal push CI: $sha"
 
-timeout 90 git -C "$REPO" fetch --no-tags --depth 1 origin refs/heads/main ||
-  die "Git fetch failed; previous release unchanged"
+git_fetch_main ||
+  die "Git fetch failed over SSH and HTTPS; previous release unchanged"
 fetched="$(git -C "$REPO" rev-parse FETCH_HEAD)"
 [[ "$fetched" == "$sha" ]] ||
   die "main changed during CI check ($sha to $fetched); retry next cycle"

@@ -1,6 +1,7 @@
 import importlib.util
 import tempfile
 import unittest
+import subprocess
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[1]
@@ -91,6 +92,57 @@ class ApprovalTests(unittest.TestCase):
     def test_no_runs_blocks(self):
         self.assertEqual(gate.decision({"workflow_runs": []}, SHA), "waiting:no matching CI")
 
+
+
+class SSHTransportTests(unittest.TestCase):
+    """Regression checks for an unchanged CI gate with SSH-first Git reads."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.source = (BASE / "scripts/deploy-portal-ecs.sh").read_text(encoding="utf-8")
+
+    def test_shell_script_syntax(self):
+        subprocess.run(
+            ["bash", "-n", str(BASE / "scripts/deploy-portal-ecs.sh")],
+            check=True,
+        )
+
+    def test_ssh_primary_and_https_fallback(self):
+        s = self.source
+        self.assertIn('readonly SSH_REMOTE="ssh://git@ssh.github.com:443/q894829927/Game-Portal.git"', s)
+        self.assertIn('readonly REMOTE="https://github.com/q894829927/Game-Portal.git"', s)
+        self.assertIn('git_remote_main() {', s)
+        self.assertIn('git_fetch_main() {', s)
+        self.assertIn('env GIT_SSH_COMMAND="$SSH_COMMAND"', s)
+        self.assertIn('ls-remote "$SSH_REMOTE" refs/heads/main', s)
+        self.assertIn('ls-remote "$REMOTE" refs/heads/main', s)
+        self.assertIn('fetch --no-tags --depth 1 "$SSH_REMOTE" refs/heads/main', s)
+        self.assertIn('fetch --no-tags --depth 1 "$REMOTE" refs/heads/main', s)
+        self.assertIn('remote="$(git_remote_main)"', s)
+        self.assertIn('git_fetch_main ||', s)
+        self.assertNotIn('ls-remote origin refs/heads/main', s)
+        self.assertNotIn('fetch --no-tags --depth 1 origin refs/heads/main', s)
+
+    def test_systemd_hardened_credentials(self):
+        s = self.source
+        service = (BASE / "ops/systemd/game-portal-deploy.service").read_text(encoding="utf-8")
+        self.assertIn('ProtectHome=true', service)
+        self.assertIn('/etc/game-portal/ssh/game_portal_deploy', s)
+        self.assertIn('/etc/game-portal/ssh/github_known_hosts', s)
+        self.assertIn('BatchMode=yes', s)
+        self.assertIn('StrictHostKeyChecking=yes', s)
+        self.assertIn('IdentitiesOnly=yes', s)
+        self.assertIn('ConnectTimeout=8', s)
+        self.assertIn('! -L "$SSH_IDENTITY"', s)
+
+    def test_approval_and_rollback_not_removed(self):
+        s = self.source
+        self.assertIn('"$BIN/ci_gate.py"', s)
+        self.assertIn('if [[ "$decision" != approved ]]', s)
+        self.assertIn('"$fetched" == "$sha"', s)
+        self.assertIn('http_matches / "$release/index.html"', s)
+        self.assertIn('Verification failed; rolling back Portal to previous release', s)
+        self.assertIn('git -C "$REPO" remote get-url origin', s)
 
 if __name__ == "__main__":
     unittest.main()
