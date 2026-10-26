@@ -113,3 +113,41 @@ img { display: block; width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .game-card, .game-card img, .card-arrow { transition: none; }
 }
+
+/* Separate protected scrapbook entrance; the two game cards stay unchanged. */
+.personal-section { margin-top: 28px; }
+.personal-portal {
+  display: flex; align-items: center; gap: 22px; width: 100%;
+  padding: 22px 27px; border-radius: 15px; border: 1px solid rgba(215, 167, 158, .3);
+  background: linear-gradient(105deg, #2b2029 0%, #35282e 54%, #2d2732 100%);
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.personal-portal:hover, .personal-portal:focus-visible {
+  transform: translateY(-3px); border-color: #d4a8a0;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .18);
+}
+.personal-portal-symbol {
+  flex: none; display: grid; place-items: center; width: 61px; height: 61px;
+  border: 1px solid rgba(241, 195, 191, .29); border-radius: 14px;
+  background: rgba(217, 164, 162, .10); color: #e6b6b2; font-size: 39px; line-height: 1;
+}
+.personal-portal-copy { display: flex; flex: 1; flex-direction: column; min-width: 0; gap: 6px; }
+.personal-portal-eyebrow { color: #dcb2ae; font-size: 10px; font-weight: 700; letter-spacing: .18em; }
+.personal-portal-copy strong { color: #f7ece5; font-size: 21px; letter-spacing: .015em; }
+.personal-portal-description { color: #bfafb4; font-size: 12px; }
+.personal-portal-arrow {
+  flex: none; display: grid; place-items: center; border: 1px solid rgba(236, 202, 202, .38);
+  border-radius: 50%; width: 41px; height: 41px; color: #f4ceca; font-size: 20px;
+}
+@media (max-width: 420px) {
+  .personal-section { margin-top: 18px; }
+  .personal-portal { gap: 13px; padding: 17px 16px; border-radius: 12px; }
+  .personal-portal-symbol { width: 43px; height: 43px; font-size: 29px; }
+  .personal-portal-eyebrow { font-size: 8px; letter-spacing: .1em; }
+  .personal-portal-copy strong { font-size: 17px; }
+  .personal-portal-description { font-size: 10px; line-height: 1.7; }
+  .personal-portal-arrow { width: 32px; height: 32px; font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .personal-portal { transition: none; }
+}

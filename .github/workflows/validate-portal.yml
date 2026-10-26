@@ -29,6 +29,7 @@ jobs:
           css = Path('styles.css').read_text()
           assert 'id="rift-enter"' in html
           assert 'id="tactics-enter"' in html
+          assert 'id="love-enter" href="/love/"' in html
           config = Path('config.js').read_text()
           assert '/games/rift/' in config
           assert '/games/tactics/' in config
