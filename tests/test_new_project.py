@@ -111,6 +111,7 @@ class ManagedDeploySafetyTests(unittest.TestCase):
                      "cmp -s", "switched=1", "switched=0", "flock -n 9",
                      "restorecon", "/games/$slug/"):
             self.assertIn(text, deploy)
+        self.assertIn("find \"$stage\" -mindepth 1 -type d -name", deploy)
         self.assertNotIn("npm install", deploy)
         self.assertNotIn("systemctl restart nginx", deploy)
 

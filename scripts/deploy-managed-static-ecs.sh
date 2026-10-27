@@ -109,7 +109,7 @@ git -C "$gitdir" archive --format=tar "$site" | tar -xf - -C "$stage" ||
   die "Missing static build"
 [[ -z "$(find "$stage" -type l -print -quit)" ]] ||
   die "Site contains symlinks; refuse outside-root reads"
-[[ -z "$(find "$stage" -type d -name '.*' -print -quit)" ]] ||
+[[ -z "$(find "$stage" -mindepth 1 -type d -name '.*' -print -quit)" ]] ||
   die "Site contains hidden directories"
 [[ -z "$(find "$stage" -type f -name '.*' ! -name '.source-sha' \
   ! -name '.site-kind' ! -name '.site-slug' -print -quit)" ]] ||
