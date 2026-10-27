@@ -112,3 +112,27 @@ Vite 项目建议先本地 npm install 并提交 package-lock.json，这样构�
 这里的一键配置**不负责自动创建 GitHub 仓库或设置 GitHub 登录凭据**；这两步需开发者拥有相关权限。对私有库、Node.js/Fastify API、数据库、账号登录、上传照片、Colyseus/WS 等场景，需要单独设计：低权限服务账号、机密配置、端口隔离、systemd、数据库备份和迁移、WebSocket 代理、登录/联机 E2E、失效回滚，并明确 HTTP/HTTPS 行为。不要把私人业务数据写进公开静态产物。
 
 首次接入最终验收应包括：main CI、site SHA、两个端口的路由、timer enabled/active、旧四个站点不受影响，以及新项目真实浏览器操作。V1 是一次性安装工具，未在新的真实 ECS 项目上实测前不能声称已完成生产验证。
+
+
+## GitHub HTTPS 网络故障：每项目独立 SSH 443 Deploy Key
+
+某些 ECS 网络连接 GitHub 的 HTTPS (github.com:443) 不稳定。安装器的报错 "GitHub public site build is not accessible" 不代表 site 分支不存在。新版安装器/自动发布器都会先尝试每项目独立 SSH 443 Deploy Key，失败则回退公开 HTTPS。
+
+首次注册新项目时，只在需要 SSH 的情况下运行：
+
+    cd /root/Game-Portal
+    bash scripts/provision-managed-ssh-ecs.sh \
+      --slug pinball --repo q894829927/Neon-Pinball
+
+脚本检查已有经过验证的 Game-Portal SSH known_hosts，生成 **仅属于 pinball 的一把新公私钥**，打印公钥。将打印的 SSH PUBLIC KEY 添加到：
+
+https://github.com/q894829927/Neon-Pinball/settings/keys
+
+在 GitHub 点击 Add deploy key，填写备注，**不要勾选 Allow write access**。不要提交私钥、粘贴私钥或向任何人发送私钥。公钥添加后重新执行一次安装命令：
+
+    bash scripts/install-managed-static-ecs.sh \
+      --slug pinball --repo q894829927/Neon-Pinball
+
+定时器后续将使用同一项目的只读 SSH 443 Key，优先访问新仓库 main/site，并保留 GitHub HTTPS 回退。它不会使用现有 Portal、Rift 或 Tactics 的 Deploy Key，也不会更改它们的 Nginx 或定时器。
+
+注意：Actions 成功检查仍需 api.github.com 可用，网络/API 失败时保留旧版本。私人仓库和后端服务仍不属于 V1 模板范围。

@@ -29,7 +29,8 @@ readonly www="/var/www/game-portal/managed-sites/$slug"
 readonly work="/opt/game-portal/managed-sites/$slug"
 readonly shared="/opt/game-portal/bin/deploy-managed-static.sh"
 readonly gate="/opt/game-portal/bin/managed-ci-gate.py"
-for c in nginx python3 git curl systemctl flock install cp cmp timeout; do
+readonly transport="/opt/game-portal/bin/managed-git-transport.sh"
+for c in nginx python3 git curl systemctl flock install cp cmp timeout ssh ssh-keygen; do
   command -v "$c" >/dev/null || fail "Missing $c"
 done
 [[ "$(git -C "$src" branch --show-current)" == main &&
@@ -41,6 +42,8 @@ url="$(git -C "$src" remote get-url origin)"
   fail "Unexpected Game-Portal origin"
 exec 9>/run/lock/portal-managed-install.lock
 flock -n 9 || fail "Concurrent install"
+[[ -f "$src/scripts/managed-git-transport.sh" ]] || fail "Managed Git helper missing"
+source "$src/scripts/managed-git-transport.sh"
 [[ -f "$conf" && -f /etc/nginx/snippets/game-portal-routes.conf ]] ||
   fail "Original Portal Nginx configuration missing"
 for p in "$snippet" "$config" "$svc" "$timer" "$www" "$work"; do
@@ -53,6 +56,10 @@ fi
 if [[ -e "$gate" ]] &&
    ! cmp -s "$gate" "$src/scripts/managed-ci-gate.py"; then
   fail "Installed CI gate differs from source; manual upgrade required"
+fi
+if [[ -e "$transport" ]] &&
+   ! cmp -s "$transport" "$src/scripts/managed-git-transport.sh"; then
+  fail "Installed transport helper differs from source; manual upgrade required"
 fi
 nginx -t
 check() {
@@ -77,10 +84,15 @@ check https /love/ || fail "Private site unavailable"
 if nginx -T 2>/dev/null | grep -Eq "location[[:space:]]+(\^~|=)?[[:space:]]*/games/$slug(/|[[:space:]])"; then
   fail "Nginx path already registered"
 fi
-m="$(timeout 40 git ls-remote "$remote" refs/heads/main)" ||
-  fail "GitHub public main is not accessible"
-s="$(timeout 40 git ls-remote "$remote" refs/heads/site)" ||
-  fail "GitHub public site build is not accessible"
+managed_git_setup "$slug" "$repo" || fail "SSH key binding mismatch"
+m="$(managed_git_ls_remote main)" || {
+  managed_git_hint "$slug" "$repo"
+  fail "GitHub main unreachable via SSH 443 or public HTTPS"
+}
+s="$(managed_git_ls_remote site)" || {
+  managed_git_hint "$slug" "$repo"
+  fail "GitHub site unreachable via SSH 443 or public HTTPS"
+}
 [[ "$m" =~ ^[0-9a-f]{40} && "$s" =~ ^[0-9a-f]{40} ]] ||
   fail "Push main and await successful publish-site GitHub Action"
 
@@ -109,6 +121,7 @@ install -d -m 0755 /etc/nginx/snippets /etc/game-portal/managed-sites \
   /opt/game-portal/bin "$www/releases" "$work"
 [[ -e "$shared" ]] || install -m 0755 "$src/scripts/deploy-managed-static-ecs.sh" "$shared"
 [[ -e "$gate" ]] || install -m 0644 "$src/scripts/managed-ci-gate.py" "$gate"
+[[ -e "$transport" ]] || install -m 0644 "$src/scripts/managed-git-transport.sh" "$transport"
 printf 'SITE_SLUG=%s\nSITE_REPO=%s\nSITE_HOST=%s\n' "$slug" "$repo" "$ip" > "$config"
 chmod 0600 "$config"
 git init -q "$work/repo"

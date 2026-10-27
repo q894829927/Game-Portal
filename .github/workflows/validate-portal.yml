@@ -17,6 +17,8 @@ jobs:
           bash -n scripts/migrate-ecs.sh
           bash -n scripts/deploy-portal-ecs.sh
           bash -n scripts/install-ecs-ci.sh
+          bash -n scripts/provision-managed-ssh-ecs.sh
+          bash -n scripts/managed-git-transport.sh
           bash -n scripts/install-managed-static-ecs.sh
           bash -n scripts/deploy-managed-static-ecs.sh
           python3 -m py_compile scripts/scaffold-static-site.py scripts/managed-ci-gate.py

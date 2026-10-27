@@ -117,5 +117,32 @@ class ManagedDeploySafetyTests(unittest.TestCase):
         self.assertNotIn("systemctl restart nginx", deploy)
 
 
+    def test_managed_project_readonly_ssh_fallback(self):
+        transport = (ROOT / "scripts/managed-git-transport.sh").read_text()
+        provision = (ROOT / "scripts/provision-managed-ssh-ecs.sh").read_text()
+        installer = (ROOT / "scripts/install-managed-static-ecs.sh").read_text()
+        deployer = (ROOT / "scripts/deploy-managed-static-ecs.sh").read_text()
+        for expected in (
+            "ssh://git@ssh.github.com:443/$repo.git",
+            "/etc/game-portal/managed-ssh/$slug/deploy_key",
+            "IdentitiesOnly=yes",
+            "StrictHostKeyChecking=yes",
+            "UserKnownHostsFile=$MANAGED_GIT_HOSTS",
+            "managed_git_ls_remote()", "managed_git_fetch_site()",
+            "refs/heads/site",
+        ):
+            self.assertIn(expected, transport)
+        self.assertIn("managed_git_setup", installer)
+        self.assertIn("managed_git_ls_remote main", installer)
+        self.assertIn("managed_git_ls_remote site", installer)
+        self.assertIn("managed_git_fetch_site", deployer)
+        self.assertIn('source "$transport"', deployer)
+        self.assertIn("ssh-keygen -q -t ed25519", provision)
+        self.assertIn("ssh-keygen -F '[ssh.github.com]:443'", provision)
+        self.assertNotIn("StrictHostKeyChecking=no", transport)
+        self.assertIn("no 'Allow write access'", provision)
+
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -27,13 +27,16 @@ readonly remote="https://github.com/$SITE_REPO.git"
 readonly api="https://api.github.com/repos/$SITE_REPO/actions/workflows/publish-site.yml/runs"
 readonly prefix="/games/$slug/"
 readonly gate="/opt/game-portal/bin/managed-ci-gate.py"
-[[ -d "$gitdir/.git" && -d "$releases" && -f "$gate" ]] ||
+readonly transport="/opt/game-portal/bin/managed-git-transport.sh"
+[[ -d "$gitdir/.git" && -d "$releases" && -f "$gate" && -f "$transport" ]] ||
   die "Managed-site installation incomplete"
 [[ "$(git -C "$gitdir" remote get-url origin)" == "$remote" ]] ||
   die "Repository origin does not match approved configuration"
-for cmd in git curl tar python3 flock timeout cmp; do
+for cmd in git curl tar python3 flock timeout cmp ssh; do
   command -v "$cmd" >/dev/null || die "Missing $cmd"
 done
+source "$transport"
+managed_git_setup "$slug" "$SITE_REPO" || die "SSH key binding mismatch"
 exec 9>"/run/lock/portal-managed-$slug.lock"
 flock -n 9 || { log "$slug already checking; skip"; exit 0; }
 
@@ -60,8 +63,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
-main_line="$(timeout 40 git -C "$gitdir" ls-remote "$remote" refs/heads/main)" ||
-  die "Public GitHub main unreachable; existing release kept"
+main_line="$(managed_git_ls_remote main)" ||
+  die "GitHub main unreachable via SSH 443 and public HTTPS; release kept"
 main="$(printf '%s\n' "$main_line" | awk '{print $1}')"
 [[ "$main" =~ ^[0-9a-f]{40}$ ]] || die "Unexpected main ref"
 if [[ -L "$live" ]]; then
@@ -76,8 +79,8 @@ elif [[ -e "$live" ]]; then
   die "Live path is not a release symlink"
 fi
 
-site_line="$(timeout 40 git -C "$gitdir" ls-remote "$remote" refs/heads/site)" ||
-  die "Public site branch unreachable"
+site_line="$(managed_git_ls_remote site)" ||
+  die "GitHub site unreachable via SSH 443 and public HTTPS"
 site="$(printf '%s\n' "$site_line" | awk '{print $1}')"
 [[ "$site" =~ ^[0-9a-f]{40}$ ]] || die "site branch not published"
 tmp="$(mktemp -d)"
@@ -92,8 +95,8 @@ if [[ "$approval" != approved ]]; then
   exit 0
 fi
 
-timeout 120 git -C "$gitdir" fetch --no-tags --depth 1 "$remote" refs/heads/site ||
-  die "Could not fetch approved site"
+managed_git_fetch_site "$gitdir" ||
+  die "GitHub site fetch failed over SSH 443 and public HTTPS"
 [[ "$(git -C "$gitdir" rev-parse FETCH_HEAD)" == "$site" ]] ||
   die "site branch changed while fetching"
 source_sha="$(git -C "$gitdir" show "$site:.source-sha" | tr -d '\r\n')"
