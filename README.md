@@ -32,3 +32,15 @@ python -m http.server 5173
 ```
 
 访问 `http://localhost:5173/`。文案和布局分别由 `index.html` 和 `styles.css` 控制；路径由 `config.js` 管理。插画在 `assets/`，使用项目自有的 SVG。
+
+## 新项目快速接入
+
+想新建一个游戏并让 ECS 自动部署，不需要重新改 Portal / Rift / Tactics 的基础配置：
+
+1. 用 [静态/Vite 脚手架](scripts/scaffold-static-site.py) 生成新仓库，设定独立路径 /games/<slug>/。
+2. 推送到**公开** GitHub 仓库 main，GitHub Actions 自动构建 site。
+3. 在 ECS 运行 [一次性安装器](scripts/install-managed-static-ecs.sh)，自动配置项目专属 Nginx 路由、systemd timer 和受 CI/SHA 保护的发布目录。
+
+后续只需推送新项目 main，约三分钟自动检查更新，失败不覆盖旧版。**目前 V1 只适合公开静态网页/Vite**；Node 服务、数据库、私有仓库和 WebSocket 不会被此工具自动部署。不会自动往大厅插入卡片，也不会重装已有三个游戏与私密空间。
+
+完整步骤、首次验收及回滚：[新项目一键接入说明](docs/NEW-PROJECT-ONECLICK.md)。
