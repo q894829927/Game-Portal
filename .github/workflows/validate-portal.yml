@@ -34,26 +34,33 @@ jobs:
           css = Path('styles.css').read_text()
           assert 'id="rift-enter"' in html
           assert 'id="tactics-enter"' in html
+          assert 'id="pinball-enter" href="/games/pinball/"' in html
+          assert '<h2>星运弹珠局</h2>' in html
           assert 'id="love-enter" href="/love/"' in html
           config = Path('config.js').read_text()
           assert '/games/rift/' in config
           assert '/games/tactics/' in config
-          assert html.count('class="game-card ') == 2
+          assert '/games/pinball/' in config
+          assert html.count('class="game-card ') == 3
           assert '<h1>选择游戏' in html
           assert '异界共振' in html
           assert 'Wildfield Tactics' in html
           assert 'id="rift-enter" href="/games/rift/"' in html
           assert 'id="tactics-enter" href="/games/tactics/"' in html
+          assert 'id="pinball-enter" href="/games/pinball/"' in html
           for removed in ('tactics-section','milestones','bottom-callout','hero-compass','03 / GROWTH','页面进度同步','返回顶部'):
               assert removed not in html, removed
           assert '@media (max-width: 820px)' in css
           assert '@media (max-width: 420px)' in css
           assert 'prefers-reduced-motion' in css
 
-          for path in ('assets/favicon.svg','assets/rift-art.svg','assets/tactics-art.svg'):
+          for path in ('assets/favicon.svg','assets/rift-art.svg','assets/tactics-art.svg','assets/pinball-art.svg'):
               text=Path(path).read_text()
               assert '<svg' in text and '</svg>' in text
-              assert './'+path in html
+              if path == 'assets/pinball-art.svg':
+                  assert '/portal-assets/pinball-art.svg' in html
+              else:
+                  assert './'+path in html
           assert 'migrate-ecs.sh' in Path('docs/DEPLOY.md').read_text()
           PY
       - name: Test release preparation and CI gating
@@ -77,7 +84,7 @@ jobs:
                   time.sleep(.2)
           else:
               raise SystemExit("Portal did not start")
-          for path in ('styles.css','app.js','config.js','assets/rift-art.svg','assets/tactics-art.svg'):
+          for path in ('styles.css','app.js','config.js','assets/rift-art.svg','assets/tactics-art.svg','assets/pinball-art.svg'):
               with urlopen('http://127.0.0.1:8765/'+path) as response:
                   assert response.status == 200
           PY

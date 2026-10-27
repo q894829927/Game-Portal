@@ -31,7 +31,9 @@ class ReleaseTests(unittest.TestCase):
             '<link rel="stylesheet" href="./styles.css">'
             '<script src="./config.js"></script><script src="./app.js"></script>'
             '<img src="./assets/rift-art.svg"><img src="./assets/tactics-art.svg">'
-            '<a href="/games/rift/" id="rift-enter">Play</a>',
+            '<img src="/portal-assets/pinball-art.svg">'
+            '<a href="/games/rift/" id="rift-enter">Play</a>'
+            '<a id="pinball-enter" href="/games/pinball/">Play</a>',
             encoding="utf-8",
         )
 
@@ -43,10 +45,16 @@ class ReleaseTests(unittest.TestCase):
             self.assertNotIn(f"./assets/{name}.svg", html)
         for name in ("styles.css", "config.js", "app.js"):
             self.assertIn(f"/{name}?v={SHA[:12]}", html)
+        self.assertIn('/portal-assets/pinball-art.svg', html)
         self.assertEqual((self.root / ".portal-commit").read_text(), SHA + "\n")
 
     def test_missing_asset_aborts(self):
         (self.root / "assets/tactics-art.svg").unlink()
+        with self.assertRaises(ValueError):
+            prep.prepare(self.root, SHA)
+
+    def test_missing_pinball_art_aborts(self):
+        (self.root / "assets/pinball-art.svg").unlink()
         with self.assertRaises(ValueError):
             prep.prepare(self.root, SHA)
 

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="700" viewBox="0 0 1000 700" role="img" aria-label="霓虹电玩城弹珠机插画">
+<defs>
+  <radialGradient id="night"><stop stop-color="#513453"/><stop offset=".44" stop-color="#251f3d"/><stop offset="1" stop-color="#0c1227"/></radialGradient>
+  <radialGradient id="aura"><stop stop-color="#ed9f80" stop-opacity=".42"/><stop offset="1" stop-color="#c0529d" stop-opacity="0"/></radialGradient>
+  <linearGradient id="cabinet" x1="0" y1="0" x2="1" y2=".4"><stop stop-color="#b97571"/><stop offset=".1" stop-color="#ffe0a9"/><stop offset=".21" stop-color="#48304c"/><stop offset=".83" stop-color="#362747"/><stop offset=".93" stop-color="#f3b786"/><stop offset="1" stop-color="#8d4760"/></linearGradient>
+  <linearGradient id="glass" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#1b2545"/><stop offset=".55" stop-color="#0e152c"/><stop offset="1" stop-color="#101f38"/></linearGradient>
+  <radialGradient id="steel" cx=".3" cy=".2" r=".86"><stop stop-color="#fff7e4"/><stop offset=".38" stop-color="#c6c6d7"/><stop offset=".8" stop-color="#64758f"/><stop offset="1" stop-color="#30354b"/></radialGradient>
+  <linearGradient id="lamp" x1="0" y1="0" x2=".5" y2="1"><stop stop-color="#fff5c8"/><stop offset=".56" stop-color="#ffd288"/><stop offset="1" stop-color="#e77c70"/></linearGradient>
+  <filter id="soft-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="8"/></filter>
+  <filter id="pin-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3"/></filter>
+  <pattern id="stars" width="90" height="82" patternUnits="userSpaceOnUse"><circle cx="17" cy="14" r="1.1" fill="#ffcedd" opacity=".32"/><circle cx="66" cy="50" r="1.8" fill="#c2c9ff" opacity=".15"/></pattern>
+</defs>
+<rect width="1000" height="700" fill="url(#night)"/><rect width="1000" height="700" fill="url(#stars)"/>
+<circle cx="505" cy="322" r="345" fill="url(#aura)"/>
+<g fill="none" stroke="#b99abb" stroke-opacity=".13"><path d="M0 558 230 440 500 581 732 434 1000 558"/><path d="M0 628 245 520 500 672 785 513 1000 643"/></g>
+<g transform="translate(346 37)">
+ <rect x="-13" y="-12" width="341" height="678" rx="36" fill="#f6a87c" opacity=".19" filter="url(#soft-glow)"/>
+ <rect x="0" y="0" width="315" height="656" rx="29" fill="url(#cabinet)" stroke="#eac094" stroke-width="4"/>
+ <rect x="11" y="10" width="293" height="634" rx="24" fill="#242039" stroke="#f9cda7" stroke-opacity=".6" stroke-width="2"/>
+ <rect x="23" y="24" width="269" height="43" rx="10" fill="#21192e" stroke="#b38b82" stroke-width="2"/>
+ <g fill="#ffdb97"><circle cx="37" cy="45" r="3.8"/><circle cx="49" cy="45" r="3.8"/><circle cx="263" cy="45" r="3.8"/><circle cx="276" cy="45" r="3.8"/></g>
+ <text x="158" y="51" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="18" letter-spacing="1.3" fill="#ffda95">STARFALL</text>
+ <g font-family="Arial,sans-serif" font-weight="800" text-anchor="middle">
+  <rect x="24" y="74" width="267" height="46" rx="8" fill="#17172e" stroke="#a4797c" stroke-width="1.5"/>
+  <g fill="#353046" stroke="#777085" stroke-width="1.2"><rect x="30" y="80" width="46" height="34" rx="5"/><rect x="81" y="80" width="46" height="34" rx="5"/><rect x="132" y="80" width="46" height="34" rx="5"/><rect x="183" y="80" width="46" height="34" rx="5"/></g>
+  <rect x="234" y="80" width="51" height="34" rx="5" fill="url(#lamp)" stroke="#fff4cd" stroke-width="1.5"/>
+  <g fill="#d4c3c5" font-size="18"><text x="53" y="102">2×</text><text x="104" y="102">4×</text><text x="155" y="102">6×</text><text x="206" y="102">8×</text></g>
+  <text x="259" y="102" font-size="17" fill="#492937">10×</text>
+ </g>
+ <rect x="24" y="133" width="267" height="480" rx="11" fill="url(#glass)" stroke="#dda98c" stroke-width="3"/>
+ <path d="M45 158V555M263 160V554" stroke="#a9828f" stroke-width="4" opacity=".7"/>
+ <path d="M44 183Q63 155 91 164M265 180Q250 151 233 166" fill="none" stroke="#f4b984" stroke-width="4" opacity=".55"/>
+ <g id="pins" fill="url(#steel)" stroke="#a4a6bd" stroke-opacity=".5" stroke-width="1">
+  <circle cx="62" cy="238" r="7"/><circle cx="94" cy="238" r="7"/><circle cx="126" cy="238" r="7"/><circle cx="158" cy="238" r="7"/><circle cx="190" cy="238" r="7"/><circle cx="222" cy="238" r="7"/>
+  <circle cx="78" cy="278" r="7"/><circle cx="110" cy="278" r="7"/><circle cx="142" cy="278" r="7"/><circle cx="174" cy="278" r="7"/><circle cx="206" cy="278" r="7"/><circle cx="238" cy="278" r="7"/>
+  <circle cx="62" cy="318" r="7"/><circle cx="94" cy="318" r="7"/><circle cx="126" cy="318" r="7"/><circle cx="158" cy="318" r="7"/><circle cx="190" cy="318" r="7"/><circle cx="222" cy="318" r="7"/>
+  <circle cx="78" cy="358" r="7"/><circle cx="110" cy="358" r="7"/><circle cx="142" cy="358" r="7"/><circle cx="174" cy="358" r="7"/><circle cx="206" cy="358" r="7"/><circle cx="238" cy="358" r="7"/>
+  <circle cx="62" cy="398" r="7"/><circle cx="94" cy="398" r="7"/><circle cx="126" cy="398" r="7"/><circle cx="158" cy="398" r="7"/><circle cx="190" cy="398" r="7"/><circle cx="222" cy="398" r="7"/>
+  <circle cx="78" cy="438" r="7"/><circle cx="110" cy="438" r="7"/><circle cx="142" cy="438" r="7"/><circle cx="174" cy="438" r="7"/><circle cx="206" cy="438" r="7"/><circle cx="238" cy="438" r="7"/>
+  <circle cx="62" cy="478" r="7"/><circle cx="94" cy="478" r="7"/><circle cx="126" cy="478" r="7"/><circle cx="158" cy="478" r="7"/><circle cx="190" cy="478" r="7"/><circle cx="222" cy="478" r="7"/>
+ </g>
+ <g>
+  <circle cx="126" cy="318" r="21" fill="#fa576e" opacity=".44" filter="url(#pin-glow)"/>
+  <circle cx="126" cy="318" r="17" fill="#ff647f"/><circle cx="126" cy="318" r="12" fill="#322743"/><path d="m126 307 3 8 8 0-6 6 2 8-7-4-7 4 2-8-6-6 8 0Z" fill="#ffe9bf"/>
+  <circle cx="206" cy="438" r="21" fill="#fa576e" opacity=".45" filter="url(#pin-glow)"/>
+  <circle cx="206" cy="438" r="17" fill="#ff647f"/><circle cx="206" cy="438" r="12" fill="#322743"/><path d="m206 427 3 8 8 0-6 6 2 8-7-4-7 4 2-8-6-6 8 0Z" fill="#ffe9bf"/>
+ </g>
+ <g stroke="#c4acaa" stroke-width="1.8">
+  <rect x="35" y="534" width="20" height="66" rx="3" fill="#243044"/><rect x="56" y="534" width="20" height="66" rx="3" fill="#a43b55" stroke="#ff9294"/><rect x="77" y="534" width="20" height="66" rx="3" fill="#243044"/>
+  <rect x="98" y="534" width="20" height="66" rx="3" fill="#243044"/><rect x="119" y="534" width="20" height="66" rx="3" fill="#243044"/><rect x="140" y="534" width="20" height="66" rx="3" fill="#243044"/>
+  <rect x="161" y="534" width="20" height="66" rx="3" fill="#a43b55" stroke="#ff9294"/><rect x="182" y="534" width="20" height="66" rx="3" fill="#243044"/><rect x="203" y="534" width="20" height="66" rx="3" fill="#243044"/>
+  <rect x="224" y="534" width="20" height="66" rx="3" fill="#243044"/><rect x="245" y="534" width="20" height="66" rx="3" fill="#243044"/>
+ </g>
+ <g fill="#ffbdb1" filter="url(#pin-glow)"><circle cx="66" cy="588" r="6"/><circle cx="171" cy="588" r="6"/></g>
+ <path d="M269 204V544" stroke="#ce9c8a" stroke-width="3"/>
+ <path d="M278 554V602" stroke="#d0c7ce" stroke-width="3"/>
+ <circle cx="278" cy="573" r="8" fill="#ffe0a3" stroke="#fff5d8" stroke-width="2"/>
+ <g transform="translate(215 183)"><circle r="15" fill="#fceaba" opacity=".35" filter="url(#pin-glow)"/><circle r="7" fill="url(#steel)" stroke="#ffe5c0" stroke-width="2"/></g>
+ <rect x="21" y="619" width="273" height="19" rx="7" fill="#35263b" stroke="#ac7f75" stroke-width="1"/>
+ <text x="158" y="633" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" letter-spacing="2" fill="#ffd9ae">CHROME  ·  NEON  ·  LUCK</text>
+</g>
+<g fill="#fbd3a4"><path d="m259 142 5-11 5 11 11 5-11 5-5 11-5-11-11-5Z" opacity=".65"/><path d="m746 235 4-8 4 8 8 4-8 4-4 8-4-8-8-4Z" opacity=".9"/><circle cx="258" cy="508" r="3"/><circle cx="747" cy="568" r="3"/></g>
+</svg>
