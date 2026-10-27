@@ -107,8 +107,8 @@ rollback() {
 trap rollback EXIT
 install -d -m 0755 /etc/nginx/snippets /etc/game-portal/managed-sites \
   /opt/game-portal/bin "$www/releases" "$work"
-install -m 0755 "$src/scripts/deploy-managed-static-ecs.sh" "$shared"
-install -m 0644 "$src/scripts/managed-ci-gate.py" "$gate"
+[[ -e "$shared" ]] || install -m 0755 "$src/scripts/deploy-managed-static-ecs.sh" "$shared"
+[[ -e "$gate" ]] || install -m 0644 "$src/scripts/managed-ci-gate.py" "$gate"
 printf 'SITE_SLUG=%s\nSITE_REPO=%s\nSITE_HOST=%s\n' "$slug" "$repo" "$ip" > "$config"
 chmod 0600 "$config"
 git init -q "$work/repo"

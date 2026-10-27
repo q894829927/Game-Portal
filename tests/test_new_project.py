@@ -105,6 +105,7 @@ class ManagedDeploySafetyTests(unittest.TestCase):
                      "Rolling back only the new site", "game-portal-routes.conf",
                      'systemctl enable --now "$unit.timer"'):
             self.assertIn(text, installer)
+        self.assertIn('[[ -e "$shared" ]] || install', installer)
         self.assertNotIn("systemctl restart nginx", installer)
         self.assertNotIn("systemctl restart rift", installer)
         for text in ("managed-ci-gate.py", ".source-sha", ".site-slug",
