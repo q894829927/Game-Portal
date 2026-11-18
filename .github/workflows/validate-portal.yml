@@ -35,13 +35,16 @@ jobs:
           assert 'id="rift-enter"' in html
           assert 'id="tactics-enter"' in html
           assert 'id="pinball-enter" href="/games/pinball/"' in html
+          assert 'id="petdog-enter" href="/games/petdog/"' in html
+          assert '<h2>倩岚汪</h2>' in html
           assert '<h2>星运弹珠局</h2>' in html
           assert 'id="love-enter" href="/love/"' in html
           config = Path('config.js').read_text()
           assert '/games/rift/' in config
           assert '/games/tactics/' in config
           assert '/games/pinball/' in config
-          assert html.count('class="game-card ') == 3
+          assert '/games/petdog/' in config
+          assert html.count('class="game-card ') == 4
           assert '<h1>选择游戏' in html
           assert '异界共振' in html
           assert 'Wildfield Tactics' in html
@@ -54,7 +57,7 @@ jobs:
           assert '@media (max-width: 420px)' in css
           assert 'prefers-reduced-motion' in css
 
-          for path in ('assets/favicon.svg','assets/rift-art.svg','assets/tactics-art.svg','assets/pinball-art.svg'):
+          for path in ('assets/favicon.svg','assets/rift-art.svg','assets/tactics-art.svg','assets/pinball-art.svg','assets/petdog-art.svg'):
               text=Path(path).read_text()
               assert '<svg' in text and '</svg>' in text
               if path == 'assets/pinball-art.svg':
@@ -84,7 +87,7 @@ jobs:
                   time.sleep(.2)
           else:
               raise SystemExit("Portal did not start")
-          for path in ('styles.css','app.js','config.js','assets/rift-art.svg','assets/tactics-art.svg','assets/pinball-art.svg'):
+          for path in ('styles.css','app.js','config.js','assets/rift-art.svg','assets/tactics-art.svg','assets/pinball-art.svg','assets/petdog-art.svg'):
               with urlopen('http://127.0.0.1:8765/'+path) as response:
                   assert response.status == 200
           PY

@@ -6,7 +6,7 @@ import sys
 
 REQUIRED = (
     "index.html", "styles.css", "app.js", "config.js",
-    "assets/favicon.svg", "assets/rift-art.svg", "assets/tactics-art.svg", "assets/pinball-art.svg",
+    "assets/favicon.svg", "assets/rift-art.svg", "assets/tactics-art.svg", "assets/pinball-art.svg", "assets/petdog-art.svg",
 )
 
 def prepare(root: Path, sha: str) -> None:
@@ -19,7 +19,7 @@ def prepare(root: Path, sha: str) -> None:
         if not item.is_file() or item.is_symlink() or item.stat().st_size == 0:
             raise ValueError(f"missing/unsafe release resource: {name}")
     html = (root / "index.html").read_text(encoding="utf-8")
-    for name in ("favicon", "rift-art", "tactics-art"):
+    for name in ("favicon", "rift-art", "tactics-art", "petdog-art"):
         before = f"./assets/{name}.svg"
         if before not in html:
             raise ValueError(f"missing asset URL {before}")
@@ -33,6 +33,8 @@ def prepare(root: Path, sha: str) -> None:
         raise ValueError("Rift game card or expected URL is absent")
     if 'id="pinball-enter" href="/games/pinball/"' not in html or '/portal-assets/pinball-art.svg' not in html:
         raise ValueError("Pinball card or artwork URL is absent")
+    if 'id="petdog-enter" href="/games/petdog/"' not in html or f'/portal-assets/petdog-art.svg?v={sha[:12]}' not in html:
+        raise ValueError("PetDog card or artwork URL is absent")
     (root / "index.html").write_text(html, encoding="utf-8")
     (root / ".portal-commit").write_text(sha + "\n", encoding="ascii")
 

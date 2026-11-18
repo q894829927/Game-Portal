@@ -2,5 +2,6 @@
 window.GAME_PORTAL_CONFIG = Object.freeze({
   riftUrl: '/games/rift/',
   tacticsUrl: '/games/tactics/',
-  pinballUrl: '/games/pinball/'
+  pinballUrl: '/games/pinball/',
+  petdogUrl: '/games/petdog/'
 });

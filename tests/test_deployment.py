@@ -31,21 +31,23 @@ class ReleaseTests(unittest.TestCase):
             '<link rel="stylesheet" href="./styles.css">'
             '<script src="./config.js"></script><script src="./app.js"></script>'
             '<img src="./assets/rift-art.svg"><img src="./assets/tactics-art.svg">'
-            '<img src="/portal-assets/pinball-art.svg">'
+            '<img src="/portal-assets/pinball-art.svg"><img src="./assets/petdog-art.svg">'
             '<a href="/games/rift/" id="rift-enter">Play</a>'
-            '<a id="pinball-enter" href="/games/pinball/">Play</a>',
+            '<a id="pinball-enter" href="/games/pinball/">Play</a>'
+            '<a id="petdog-enter" href="/games/petdog/">Play</a>',
             encoding="utf-8",
         )
 
     def test_rewrite_and_commit_marker(self):
         prep.prepare(self.root, SHA)
         html = (self.root / "index.html").read_text(encoding="utf-8")
-        for name in ("favicon", "rift-art", "tactics-art"):
+        for name in ("favicon", "rift-art", "tactics-art", "petdog-art"):
             self.assertIn(f"/portal-assets/{name}.svg?v={SHA[:12]}", html)
             self.assertNotIn(f"./assets/{name}.svg", html)
         for name in ("styles.css", "config.js", "app.js"):
             self.assertIn(f"/{name}?v={SHA[:12]}", html)
         self.assertIn('/portal-assets/pinball-art.svg', html)
+        self.assertIn(f"/portal-assets/petdog-art.svg?v={SHA[:12]}", html)
         self.assertEqual((self.root / ".portal-commit").read_text(), SHA + "\n")
 
     def test_missing_asset_aborts(self):
@@ -55,6 +57,11 @@ class ReleaseTests(unittest.TestCase):
 
     def test_missing_pinball_art_aborts(self):
         (self.root / "assets/pinball-art.svg").unlink()
+        with self.assertRaises(ValueError):
+            prep.prepare(self.root, SHA)
+
+    def test_missing_petdog_art_aborts(self):
+        (self.root / "assets/petdog-art.svg").unlink()
         with self.assertRaises(ValueError):
             prep.prepare(self.root, SHA)
 

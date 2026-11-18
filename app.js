@@ -4,7 +4,8 @@
   for (const [id, route] of [
     ['rift-enter', config?.riftUrl],
     ['tactics-enter', config?.tacticsUrl],
-    ['pinball-enter', config?.pinballUrl]
+    ['pinball-enter', config?.pinballUrl],
+    ['petdog-enter', config?.petdogUrl]
   ]) {
     const link = document.getElementById(id);
     if (link && typeof route === 'string' &&

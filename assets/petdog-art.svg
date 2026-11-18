@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-label="倩岚汪柴犬封面插画">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e8d9bd"/>
+      <stop offset="1" stop-color="#aeb89b"/>
+    </linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f5e8d2"/>
+      <stop offset="1" stop-color="#d9c7a7"/>
+    </linearGradient>
+    <linearGradient id="fur" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#e49a58"/>
+      <stop offset="1" stop-color="#b85f32"/>
+    </linearGradient>
+    <linearGradient id="belly" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff1d8"/>
+      <stop offset="1" stop-color="#e8d5b8"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+  <rect width="900" height="1200" fill="url(#sky)"/>
+  <circle cx="700" cy="190" r="118" fill="#f6e8c9" opacity=".75"/>
+  <path d="M100 1200V475c0-230 157-390 350-390s350 160 350 390v725z" fill="url(#wall)" opacity=".8"/>
+  <path d="M154 1200V505c0-187 130-319 296-319s296 132 296 319v695z" fill="#c7b895" opacity=".35"/>
+  <path d="M0 930c170-85 295-30 450-15s280-65 450-8v293H0z" fill="#8e9b78"/>
+  <path d="M0 1015c205-60 330-5 485 0s255-36 415-4v189H0z" fill="#74896d"/>
+  <ellipse cx="450" cy="1020" rx="265" ry="70" fill="#5e6c53" opacity=".35" filter="url(#shadow)"/>
+  <ellipse cx="450" cy="1000" rx="250" ry="58" fill="#d5b98c"/>
+  <ellipse cx="450" cy="1000" rx="210" ry="38" fill="#e9d6b3"/>
+  <path d="M220 730c-30-105 12-232 102-291 80-53 180-59 262-13 95 54 133 177 97 300l-37 190c-12 61-61 99-126 99H384c-68 0-118-43-130-105z" fill="url(#fur)"/>
+  <path d="M330 850c32-46 74-68 120-68s89 22 120 68l20 105c7 42-23 72-67 72H376c-44 0-74-30-67-72z" fill="url(#belly)"/>
+  <path d="M254 430 213 205c-8-42 36-63 66-31l157 170z" fill="#b85f32"/>
+  <path d="m646 430 41-225c8-42-36-63-66-31L464 344z" fill="#b85f32"/>
+  <path d="m276 384-21-143c-5-27 20-39 40-19l102 112z" fill="#e7ad8b"/>
+  <path d="m624 384 21-143c5-27-20-39-40-19L503 334z" fill="#e7ad8b"/>
+  <path d="M250 470c0-160 86-274 200-274s200 114 200 274c0 153-79 270-200 270S250 623 250 470z" fill="url(#fur)"/>
+  <path d="M306 486c18-70 65-105 112-101 36 3 59 27 67 68-10 85-49 134-111 134-49 0-82-40-68-101z" fill="url(#belly)"/>
+  <path d="M594 486c-18-70-65-105-112-101-36 3-59 27-67 68 10 85 49 134 111 134 49 0 82-40 68-101z" fill="url(#belly)"/>
+  <ellipse cx="355" cy="450" rx="14" ry="20" fill="#35271f"/>
+  <ellipse cx="545" cy="450" rx="14" ry="20" fill="#35271f"/>
+  <circle cx="360" cy="444" r="4" fill="#fff5e7"/>
+  <circle cx="550" cy="444" r="4" fill="#fff5e7"/>
+  <path d="M424 520c0-17 12-28 26-28s26 11 26 28c0 15-14 24-26 24s-26-9-26-24z" fill="#33251f"/>
+  <path d="M450 543c-3 25-20 37-43 33m43-33c3 25 20 37 43 33" fill="none" stroke="#70483a" stroke-width="9" stroke-linecap="round"/>
+  <path d="M292 642c-60 9-86 45-81 93 5 39 33 59 61 48 29-11 36-44 38-91z" fill="#c56e39"/>
+  <path d="M608 642c60 9 86 45 81 93-5 39-33 59-61 48-29-11-36-44-38-91z" fill="#c56e39"/>
+  <path d="M325 911c-33 7-49 30-44 54 4 20 24 29 55 29h76c18 0 25-15 17-30l-30-57z" fill="#f7e7cc"/>
+  <path d="M575 911c33 7 49 30 44 54-4 20-24 29-55 29h-76c-18 0-25-15-17-30l30-57z" fill="#f7e7cc"/>
+  <path d="M300 750c40 40 88 59 150 59s110-19 150-59" fill="none" stroke="#f1c58c" stroke-width="22" stroke-linecap="round"/>
+  <path d="M304 750c39 38 87 56 146 56s107-18 146-56" fill="none" stroke="#607d69" stroke-width="20" stroke-linecap="round"/>
+  <circle cx="450" cy="811" r="18" fill="#e8bf72" stroke="#9d743d" stroke-width="5"/>
+  <path d="M624 792c68-8 88-54 72-91-15-35-49-39-64-5-12 27 1 50 31 51" fill="none" stroke="#c56e39" stroke-width="31" stroke-linecap="round"/>
+  <path d="M624 792c68-8 88-54 72-91-15-35-49-39-64-5-12 27 1 50 31 51" fill="none" stroke="#f0c58f" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="185" cy="850" r="44" fill="#e9b75e"/>
+  <path d="M144 850h82M185 809v82" stroke="#fff0cf" stroke-width="9" stroke-linecap="round"/>
+  <path d="M92 1010c40-45 72-60 105-55m510 47c28-50 57-68 91-67" fill="none" stroke="#526c54" stroke-width="15" stroke-linecap="round"/>
+  <g fill="#6f875f">
+    <ellipse cx="103" cy="954" rx="20" ry="42" transform="rotate(-34 103 954)"/>
+    <ellipse cx="211" cy="946" rx="18" ry="37" transform="rotate(28 211 946)"/>
+    <ellipse cx="746" cy="942" rx="21" ry="42" transform="rotate(31 746 942)"/>
+    <ellipse cx="814" cy="981" rx="18" ry="38" transform="rotate(-28 814 981)"/>
+  </g>
+  <text x="450" y="112" text-anchor="middle" fill="#5e715d" font-family="Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="8">A LITTLE COMPANION</text>
+  <text x="450" y="1150" text-anchor="middle" fill="#f8efdf" font-family="Arial,sans-serif" font-size="27" font-weight="700" letter-spacing="12">QIAN LAN WAN</text>
+</svg>
